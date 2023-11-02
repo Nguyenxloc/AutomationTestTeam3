@@ -45,7 +45,7 @@ public class paneOfmenu extends JPanel {
 //        paneOfProduct1.setVisible(true);
 
     static ArrayList<menuCell> lstCell = new ArrayList<>();
-    String path = "src\\main\\java\\com\\view\\icon\\menufhd.jpg";
+    String path = "CoffeeShopTeam3-master\\src\\main\\java\\com\\view\\icon\\menufhd.jpg";
     File file = new File(path);
     String absolutePath = file.getAbsolutePath();
     String dir = absolutePath;
