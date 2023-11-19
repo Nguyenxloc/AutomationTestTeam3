@@ -50,16 +50,19 @@
             <artifactId>KControls-2.0</artifactId>
             <version>SNAPSHOT</version>
         </dependency>
+
         <dependency>
             <groupId>unknown.binary</groupId>
             <artifactId>KGradientPanel</artifactId>
             <version>SNAPSHOT</version>
         </dependency>
+
         <dependency>
             <groupId>unknown.binary</groupId>
             <artifactId>AbsoluteLayout</artifactId>
             <version>SNAPSHOT</version>
         </dependency>
+
         <dependency>
             <groupId>com.toedter</groupId>
             <artifactId>jcalendar</artifactId>
@@ -70,6 +73,13 @@
             <groupId>org.apache.poi</groupId>
             <artifactId>poi</artifactId>
             <version>5.2.3</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/junit/junit -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.13.2</version>
+            <scope>test</scope>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.apache.poi/poi-ooxml -->
         <!-- https://mvnrepository.com/artifact/javax.json/javax.json-api -->
@@ -87,18 +97,19 @@
             <artifactId>itextpdf</artifactId>
             <version>5.5.13.1</version>
         </dependency>
+
         <dependency>
             <groupId>javax.json</groupId>
             <artifactId>javax.json-api</artifactId>
             <version>1.1</version>
             <type>jar</type>
         </dependency>
+
         <dependency>
             <groupId>org.glassfish</groupId>
             <artifactId>javax.json</artifactId>
             <version>1.0.4</version>
         </dependency>
-
 
         <dependency>
             <groupId>org.apache.poi</groupId>
@@ -111,6 +122,7 @@
             <version>3.3.0</version>
             <type>jar</type>
         </dependency>
+
         <dependency>
             <groupId>com.github.sarxos</groupId>
             <artifactId>webcam-capture</artifactId>
