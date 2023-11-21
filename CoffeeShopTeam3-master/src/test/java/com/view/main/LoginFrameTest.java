@@ -6,6 +6,6 @@ public class LoginFrameTest extends TestCase {
 
     public void testCheckingPort() {
         LoginFrame login = new LoginFrame();
-        assertEquals(true,login.checkingPort("nguyenloc","123456"));
+        assertEquals(true,login.checkingPort("nguyenloc","12345"));
     }
 }
