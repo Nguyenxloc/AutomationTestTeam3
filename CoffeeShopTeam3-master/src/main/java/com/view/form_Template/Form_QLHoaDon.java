@@ -9,7 +9,6 @@ import DoUong_HoaDon_ThongKe_Model.LichSuHoaDon;
 import DoUong_HoaDon_ThongKe_Service.LichSuHoaDonService;
 import java.sql.Date;
 import java.util.ArrayList;
-import javax.swing.JTextField;
 import javax.swing.RowFilter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
@@ -58,7 +57,7 @@ public class Form_QLHoaDon extends javax.swing.JPanel {
     }
 
     // Load dữ liệu theo thời gian truyền vào
-    public void loadDataTheoTime(Date d1, Date d2) {
+    public String loadDataTheoTime(Date d1, Date d2) {
         try {
             model = (DefaultTableModel) tblLichSuHoaDon.getModel();
             model.setRowCount(0);
@@ -79,7 +78,9 @@ public class Form_QLHoaDon extends javax.swing.JPanel {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return null;
     }
+
 
     // Load dữ liệu theo mã để tìm kiếm theo mã
     public void loadDataTheoMa(String maHoaDon) {
@@ -522,13 +523,11 @@ public class Form_QLHoaDon extends javax.swing.JPanel {
     }//GEN-LAST:event_tblLichSuHoaDonMouseClicked
 
     private void btnTimKiemTheoNgayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTimKiemTheoNgayActionPerformed
-//        String d1 = ((JTextField) dateNgayBatDau.getDateEditor().getUiComponent()).getText();
-//        String d2 = ((JTextField) dateNgayKetThuc.getDateEditor().getUiComponent()).getText();
+
         Date d1 = new Date(dateNgayBatDau.getDate().getTime());
         Date d2 = new Date(dateNgayKetThuc.getDate().getTime());
         loadDataTheoTime(d1, d2);
-    }//GEN-LAST:event_btnTimKiemTheoNgayActionPerformed
-
+    }
     private void btnLoadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoadActionPerformed
         // TODO add your handling code here:
         loadData();

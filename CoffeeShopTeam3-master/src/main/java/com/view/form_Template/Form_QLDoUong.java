@@ -106,29 +106,109 @@ public class Form_QLDoUong extends javax.swing.JPanel {
         }
     }
 
-    public void save(ChiTietDoUong chiTietDoUong) {
+    public boolean loadData(String tenDoUong, String loaiDoUong, int giaNhap, int giaBan, String moTa) {
+        boolean status = false;
+        try {
+            ChiTietDoUong chiTietDoUong = new ChiTietDoUong();
+            LoaiDoUong loaiDoUong1 = new LoaiDoUong();
+            chiTietDoUong.setTenDoUong(tenDoUong);
+//            chiTietDoUong.setLoaiDoUong(loaiDoUong);
+            chiTietDoUong.setGiaBan(giaBan);
+            chiTietDoUong.setGiaNhap(giaNhap);
+            chiTietDoUong.setMoTa(moTa);
+            if (chiTietDoUong != null) {
+                JOptionPane.showMessageDialog(this, "Load thành công");
+                loadData();
+                status = true;
+            } else {
+                JOptionPane.showMessageDialog(this, "Load thất bại");
+                status = true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return status;
+    }
+
+    public boolean save(ChiTietDoUong chiTietDoUong) {
+        boolean status = false;
+        if (txtTenDoUong.getText().equalsIgnoreCase("")) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập tên sản phẩm");
+            txtTenDoUong.requestFocus();
+            status = false;
+        }
+
+        if (txtGiaNhapDoUong.getText().equalsIgnoreCase("")) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập giá nhập sản phẩm");
+            txtGiaNhapDoUong.requestFocus();
+            status = false;
+        }
+
+        if (txtGiaBanDoUong.getText().equalsIgnoreCase("")) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập giá bán sản phẩm");
+            txtGiaBanDoUong.requestFocus();
+            status = false;
+        }
+
+        if (taraMota.getText().equalsIgnoreCase("")) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập mô tả sản phẩm");
+            taraMota.requestFocus();
+            status = false;
+        }
+
+        //Check giá nhập và giá bán phải là số
+        try {
+            double giaNhap = Double.parseDouble(txtGiaNhapDoUong.getText());
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập giá nhập bằng số");
+            txtGiaNhapDoUong.requestFocus();
+            status = false;
+        }
+
+        try {
+            double giaBan = Double.parseDouble(txtGiaBanDoUong.getText());
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập giá bán bằng số");
+            txtGiaBanDoUong.requestFocus();
+            status = false;
+        }
         try {
             chiTietDoUongService.saveChiTietDoUong(chiTietDoUong);
+            JOptionPane.showMessageDialog(this, "Thêm thành công");
+            status = true;
         } catch (Exception e) {
             e.printStackTrace();
+            status = false;
         }
+        return status;
     }
 
-    public void update(ChiTietDoUong chiTietDoUong) {
+    public boolean update(ChiTietDoUong chiTietDoUong) {
+        boolean status = false;
         try {
             chiTietDoUongService.updateChiTietDoUong(chiTietDoUong);
+            JOptionPane.showMessageDialog(this, "Sửa thành công");
+            status = true;
         } catch (Exception e) {
             e.printStackTrace();
+            status = false;
         }
+        return status;
     }
 
-    public void delete() {
+    public boolean delete(String id) {
+        boolean status = false;
         try {
-            index = tblDanhSachDoUong.getSelectedRow();
-            chiTietDoUongService.deleteChiTietDoUong(lstChiTietDoUong.get(index).getId());
+//            index = tblDanhSachDoUong.getSelectedRow();
+//            chiTietDoUongService.deleteChiTietDoUong(lstChiTietDoUong.get(index).getId());
+            chiTietDoUongService.deleteChiTietDoUong(id);
+            JOptionPane.showMessageDialog(this, "Xóa thành công");
+            status = true;
         } catch (Exception e) {
             e.printStackTrace();
+            status = false;
         }
+        return status;
     }
 
     public void xuatFileExcel() throws FileNotFoundException, IOException {
@@ -210,53 +290,7 @@ public class Form_QLDoUong extends javax.swing.JPanel {
         imgBytes = null;
         loadData();
     }
-
-//    public void timKiem() {
-//        String tenDoUong = txtTimKiemTenDoUong.getText();
-//        int count = cboTimKiemDanhMucDoUong.getSelectedIndex();
-//        String idLoaiDoUong = lstLoaiDoUong.get(count).getId();
-//        double giaBatDau = 0;
-//        double giaKetThuc = 0;
-//    public void timKiem() {
-//        String tenDoUong = txtTimKiemTenDoUong.getText();
-//        if(tenDoUong.equalsIgnoreCase(""))
-//           tenDoUong = null;
-//        int count = cboTimKiemDanhMucDoUong.getSelectedIndex();
-//        String idLoaiDoUong = lstLoaiDoUong.get(count).getId();
-//        double giaBatDau=0;
-//        double giaKetThuc=0;
-////        try {
-////            giaBatDau = Double.parseDouble(txtStartPrice.getText());
-////        } catch (Exception e) {
-////            giaBatDau = 0;
-////        }
-////
-////        try (FileOutputStream outputStream = new FileOutputStream("DSSanPham.xlsx")) {
-////            workbook.write(outputStream);
-////        }
-////    }
-////
-////    public void convertURLToBytes() throws IOException {
-////        BufferedImage bImage = ImageIO.read(new File(lblUrl.getText()));
-////        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-////        ImageIO.write(bImage, "jpg", bos);
-////        imgBytes = bos.toByteArray();
-////    }
-////
-////    public void clear() {
-////        lblHinhAnh.setIcon(null);
-////        lblHinhAnh.setText("Ảnh");
-////        lblUrl.setText("#url");
-////        txtTenDoUong.setText("");
-////        cboDanhMucDoUong.setSelectedIndex(0);
-////        txtGiaNhapDoUong.setText("");
-////        txtGiaBanDoUong.setText("");
-////        taraMota.setText("");
-////        index = -1;
-////        imgBytes = null;
-////        loadData();
-////    }
-//
+    
     public void timKiem() {
         String tenDoUong = txtTimKiemTenDoUong.getText();
         if (tenDoUong.equalsIgnoreCase("")) {
@@ -266,17 +300,6 @@ public class Form_QLDoUong extends javax.swing.JPanel {
         String idLoaiDoUong = lstLoaiDoUong.get(count).getId();
         double giaBatDau = 0;
         double giaKetThuc = 0;
-//        try {
-//            giaBatDau = Double.parseDouble(txtStartPrice.getText());
-//        } catch (Exception e) {
-//            giaBatDau = 0;
-//        }
-//        
-//        try {
-//             giaKetThuc = Double.parseDouble(txtEndPrice.getText());
-//        } catch (Exception e) {
-//             giaKetThuc = 0;
-//        }
         try {
             DefaultTableModel model = new DefaultTableModel();
             model = (DefaultTableModel) tblDanhSachDoUong.getModel();
@@ -642,9 +665,9 @@ public class Form_QLDoUong extends javax.swing.JPanel {
             }
         ));
         tblDanhSachDoUong.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tblDanhSachDoUongMouseClicked(evt);
-            }
+//            public void mouseClicked(java.awt.event.MouseEvent evt) {
+//                tblDanhSachDoUongMouseClicked(evt);
+//            }
         });
         jScrollPane2.setViewportView(tblDanhSachDoUong);
 
@@ -974,6 +997,10 @@ public class Form_QLDoUong extends javax.swing.JPanel {
     private javax.swing.JTextField txtGiaNhapDoUong;
     private javax.swing.JTextField txtTenDoUong;
     private javax.swing.JTextField txtTimKiemTenDoUong;
+
+
+
+
     // End of variables declaration//GEN-END:variables
 
 }
