@@ -4,36 +4,18 @@
  */
 package com.view.form_Template;
 
-import DoUong_HoaDon_ThongKe_Model.LichSuHoaDon;
-import DoUong_HoaDon_ThongKe_Model.LoaiDoUong;
-import DoUong_HoaDon_ThongKe_Service.LoaiDoUongService;
-
-import com.view.form_Template.*;
-import DoUong_HoaDon_ThongKe_Model.LoaiDoUong;
-import DoUong_HoaDon_ThongKe_Service.LichSuHoaDonService;
-import com.view.form.ThemSanPhamGiamGiaJDialog;
-import model.ChiTietDoUong;
-
-import com.view.model.QuanLyTaiKhoan;
-import java.awt.Checkbox;
-import java.text.DecimalFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
-import model.CapBac;
+
 import model.HoaDon;
 import model.KhuyenMai;
-import model.TaiKhoan;
-import service.ChiTietDoUongService_Master;
 import service.HoaDonService;
 import service.SaleService;
-import service.TaoTaiKhoanService;
 
 /**
  *
@@ -66,7 +48,7 @@ public class Form_KhuyenMai extends javax.swing.JPanel {
         }
     }
 
-    private void fillToTableKhuyenMaiByTrangThai(String trangThai, ArrayList<KhuyenMai> listKM) {
+    public void fillToTableKhuyenMaiByTrangThai(String trangThai, ArrayList<KhuyenMai> listKM) {
         DefaultTableModel model = (DefaultTableModel) tblKhuyenMai.getModel();
         model.setRowCount(0);
         listKM = service.selectALLByTrangThai(trangThai);
@@ -155,7 +137,7 @@ public class Form_KhuyenMai extends javax.swing.JPanel {
     }
 
     // Chức năng set các giá trị trong bảng khuyến mãi lên form
-    private void setForm() {
+    public void setForm() {
         int row = tblKhuyenMai.getSelectedRow();
         if (row == -1) {
             JOptionPane.showMessageDialog(this, "Vui lòng chọn vào 1 mã khuyến mãi trên table");
@@ -208,13 +190,17 @@ public class Form_KhuyenMai extends javax.swing.JPanel {
 //
     // Chức năng đăng ký form
 
-    private void addKhuyenMai() {
+    public boolean addKhuyenMai() {
         if (validateForm()) {
             KhuyenMai km = getFomr();
 
+
+
+
+
             if (km == null) {
                 JOptionPane.showMessageDialog(this, "Lỗi trống dữ liệu");
-                return;
+                return false;
             }
 
             int choice = JOptionPane.showConfirmDialog(this, "Bạn có chắc chắn muốn thêm?", "Add", JOptionPane.YES_NO_OPTION);
@@ -228,10 +214,11 @@ public class Form_KhuyenMai extends javax.swing.JPanel {
             }
 
         }
+        return false;
     }
 
     // Chức năng update Khuyen Mai
-    private void updateKhuyenMai() {
+    public void updateKhuyenMai() {
 
         int row = tblKhuyenMai.getSelectedRow();
         if (row == -1) {
@@ -259,26 +246,27 @@ public class Form_KhuyenMai extends javax.swing.JPanel {
     }
 
     // Chức năng delete KHuyến mại
-    private void deleteKhuyeMai() {
+    public boolean deleteKhuyeMai() {
 
         int row = tblKhuyenMai.getSelectedRow();
         if (row == -1) {
             JOptionPane.showMessageDialog(this, "Vui lòng chọn 1 khuyến mãi trên table");
-            return;
+            return false;
         }
 
         int choice = JOptionPane.showConfirmDialog(this, "Bạn có chắc chắn muốn xóa?", "Delete", JOptionPane.YES_NO_OPTION);
         if (choice == JOptionPane.YES_OPTION) {
-            String maKhuyenMai = tblKhuyenMai.getValueAt(row, 0).toString();
+           String maKhuyenMai = tblKhuyenMai.getValueAt(row, 0).toString();
             service.delete(maKhuyenMai);
             JOptionPane.showMessageDialog(this, "Xóa khuyến mãi thành công");
             fillToTableKhuyenMai();
             clearForm();
         }
+        return true;
     }
 
     // Chức năng tìm kiếm trong bảng khuyến mại
-    private void searchKhuyenMai() {
+    public void searchKhuyenMai() {
         DefaultTableModel model = (DefaultTableModel) tblKhuyenMai.getModel();
         TableRowSorter<DefaultTableModel> search = new TableRowSorter<>(model);
         tblKhuyenMai.setRowSorter(search);
@@ -286,7 +274,7 @@ public class Form_KhuyenMai extends javax.swing.JPanel {
     }
 
     // Chức năng tìm kiếm
-    private void searchHoaDon() {
+    public void searchHoaDon() {
         DefaultTableModel model = (DefaultTableModel) tblHoaDon.getModel();
         TableRowSorter<DefaultTableModel> search = new TableRowSorter<>(model);
         tblHoaDon.setRowSorter(search);
@@ -874,7 +862,7 @@ public class Form_KhuyenMai extends javax.swing.JPanel {
 
     private void btnXoaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXoaActionPerformed
         // TODO add your handling code here:
-        deleteKhuyeMai();
+//        deleteKhuyeMai();
     }//GEN-LAST:event_btnXoaActionPerformed
 
     private void btnCapNhatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCapNhatActionPerformed
@@ -894,7 +882,7 @@ public class Form_KhuyenMai extends javax.swing.JPanel {
 
     private void btnThem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThem1ActionPerformed
         // TODO add your handling code here:
-        addKhuyenMai();
+//        addKhuyenMai();
     }//GEN-LAST:event_btnThem1ActionPerformed
 
     private void txtTimHDKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTimHDKeyReleased
