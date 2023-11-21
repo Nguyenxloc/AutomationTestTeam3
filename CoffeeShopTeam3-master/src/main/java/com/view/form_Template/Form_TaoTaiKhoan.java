@@ -78,15 +78,7 @@ public class Form_TaoTaiKhoan extends javax.swing.JPanel {
     }
 
     // Chức năng đăng ký form
-    public Boolean createAccount(
-            String tenNV,
-            String gioiTinh,
-            Date ngaySinh,
-            String diaChi,
-             String soDT,
-             String matKhau,
-            CapBac capBac,
-             String taiKhoan) {
+    public Boolean createAccount(String tenNV, String gioiTinh, Date ngaySinh, String diaChi, String soDT, String matKhau, CapBac capBac, String taiKhoan) {
         Boolean status = false;
         if (validateForm()) {
             int choice = JOptionPane.showConfirmDialog(this, "Bạn chắc chắn muốn tạo tài khoản?", "Create Account?", JOptionPane.YES_NO_OPTION);
@@ -96,18 +88,19 @@ public class Form_TaoTaiKhoan extends javax.swing.JPanel {
 
                 if (createAcount == null) {
                     JOptionPane.showMessageDialog(this, "Lỗi trống dữ liệu");
-                    return false;
+                    status =  false;
                 }
                 service.save(createAcount);
                 JOptionPane.showMessageDialog(this, "Đăng ký tài khoản thành công");
                 clearForm();
-                return true;
+                status = true;
             }
         }
         return status;
     }
 
     public boolean validateForm() {
+        Boolean status = false;
         // Validate để trống trường dữ liệu
         if (txtUsername.getText().trim().equals("")) {
             JOptionPane.showMessageDialog(this, "Vui lòng nhập vào tên tài khoản");
@@ -464,14 +457,19 @@ public class Form_TaoTaiKhoan extends javax.swing.JPanel {
         } else {
             gioiTinh = "Nữ";
         }
-        SimpleDateFormat formater = new SimpleDateFormat("dd/MM/yyyy");
+//        SimpleDateFormat formater = new SimpleDateFormat("dd/MM/yyyy");
         Date ngaySinh = new Date();
-        String strNgayS = formater.format(ngaySinh.getTime());
+//        String strNgayS = formater.format(ngaySinh.getTime());
         String diaChi = txtDiaChi.getText();
         String soDT = txtSoDienThoai.getText();
         String matKhau = String.valueOf(txtPassword.getPassword());
         int count = cboCapBac.getSelectedIndex();
         CapBac capBac = listCapBac.get(count);
+
+//        CapBac capBac = new CapBac();
+//        capBac.getTenCB();
+//        capBac.setTenCB(count);
+
 
 
 // Lấy giá trị từ đối tượng CapBac
