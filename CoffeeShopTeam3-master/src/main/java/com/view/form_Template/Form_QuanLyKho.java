@@ -14,6 +14,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import javax.imageio.spi.ServiceRegistry;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -25,6 +26,7 @@ public class Form_QuanLyKho extends javax.swing.JPanel {
 
     private INhapKhoService nhapkhoService = new NhapKhoService();
     List<QLNhapKho> ds = new ArrayList<>();
+    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
     
     /**
      * Creates new form Form_QuanLyKho
@@ -152,6 +154,86 @@ public class Form_QuanLyKho extends javax.swing.JPanel {
             };
             dtm.addRow(row);
         }
+    }
+
+    public boolean nhapKho(NhanVien nv, String tenSP, Date ngayNhap, String donVi, int soLuong, BigDecimal donGia){
+        boolean status = false;
+        try {
+            QLNhapKho nk = new QLNhapKho();
+            nk.setNhanVien(nv);
+            nk.setTenSP(tenSP);
+            nk.setNgayNhap(ngayNhap);
+            nk.setDonVi(donVi);
+            nk.setSoLuong(soLuong);
+            nk.setDonGia(donGia);
+            if (nk != null) {
+                JOptionPane.showMessageDialog(this, "Nhập thành công");
+                nhapkhoService.them(nk);
+                loadTable();
+                clear();
+                status = true;
+            } else {
+                JOptionPane.showMessageDialog(this, "Nhập không thành công");
+                status = false;
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return status;
+    }
+
+    public boolean sua(String id,NhanVien nv, String tenSP, Date ngayNhap, String donVi, int soLuong, BigDecimal donGia){
+        boolean status = false;
+        try {
+            QLNhapKho nk = new QLNhapKho();
+            nk.setNhanVien(nv);
+            nk.setTenSP(tenSP);
+            nk.setNgayNhap(ngayNhap);
+            nk.setDonVi(donVi);
+            nk.setSoLuong(soLuong);
+            nk.setDonGia(donGia);
+//            int row = tblTable.getSelectedRow();
+//            id = tblTable.getValueAt(row, 0).toString();
+//            if (row == -1) {
+//                JOptionPane.showMessageDialog(this, "Chọn 1 dòng để xóa");
+//                status = false;
+//            }
+            if (nk != null) {
+                JOptionPane.showMessageDialog(this, "Sửa thành công");
+                nhapkhoService.sua(id, nk);
+                loadTable();
+                clear();
+                status = true;
+            } else {
+                JOptionPane.showMessageDialog(this, "Sửa không thành công");
+                status = false;
+            }
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return status;
+    }
+
+    public boolean xoa(String id){
+        boolean status = false;
+//        int row = tblTable.getSelectedRow();
+//        if (row == -1) {
+//            JOptionPane.showMessageDialog(this, "Chọn 1 dòng để xóa");
+//            status = false;
+//        }
+//        id = tblTable.getValueAt(row, 0).toString();
+        boolean ketQua = nhapkhoService.xoa(id);
+        if (ketQua == true) {
+            JOptionPane.showMessageDialog(this, "Xóa ko thành công");
+            status = false;
+        } else {
+            JOptionPane.showMessageDialog(this, "Xóa thành công");
+            loadTable();
+            clear();
+            status = true;
+        }
+        return status;
     }
     
     /**
@@ -635,60 +717,30 @@ public class Form_QuanLyKho extends javax.swing.JPanel {
 
     private void btnNhapKhoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNhapKhoActionPerformed
         try {
-            QLNhapKho nk = getFrom();
-            if (nk != null) {
-                JOptionPane.showMessageDialog(this, "Nhập thành công");
-                nhapkhoService.them(nk);
-                loadTable();
-                clear();
-            } else {
-                JOptionPane.showMessageDialog(this, "Nhập không thành công");
-            }
-
-        } catch (ParseException ex) {
-            ex.printStackTrace();
+            int cout = cbbtenNV.getSelectedIndex();
+            NhanVien nv = nhapkhoService.getCBBNV().get(cout);
+            Date nn = new Date(sdf.parse(txtnNhap.getText()).getTime());
+            nhapKho(nv, txtTenSP.getText(), nn, txtdVi.getText(), Integer.parseInt(txtsoLuong.getText()), new BigDecimal(txtdGia.getText()));
+        }catch (Exception e){
+            e.printStackTrace();
         }
+
     }//GEN-LAST:event_btnNhapKhoActionPerformed
 
     private void btnSuaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSuaActionPerformed
         try {
-            QLNhapKho nv = getFrom();
-            int row = tblTable.getSelectedRow();
-            String id = tblTable.getValueAt(row, 0).toString();
-            if (row == -1) {
-                JOptionPane.showMessageDialog(this, "Chọn 1 dòng để xóa");
-                return;
-            }
-            if (nv != null) {
-                JOptionPane.showMessageDialog(this, "Sửa thành công");
-                nhapkhoService.sua(id, nv);
-                loadTable();
-                clear();
-            } else {
-                JOptionPane.showMessageDialog(this, "Sửa không thành công");
-            }
-
-        } catch (ParseException ex) {
-            ex.printStackTrace();
+            int cout = cbbtenNV.getSelectedIndex();
+            NhanVien nv = nhapkhoService.getCBBNV().get(cout);
+            Date nn = new Date(sdf.parse(txtnNhap.getText()).getTime());
+            sua("",nv, txtTenSP.getText(), nn, txtdVi.getText(), Integer.parseInt(txtsoLuong.getText()), new BigDecimal(txtdGia.getText()));
+        }catch (Exception e){
+            e.printStackTrace();
         }
     }//GEN-LAST:event_btnSuaActionPerformed
 
     private void btnXoaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXoaActionPerformed
         int row = tblTable.getSelectedRow();
-        if (row == -1) {
-            JOptionPane.showMessageDialog(this, "Chọn 1 dòng để xóa");
-            return;
-        }
-        String id = tblTable.getValueAt(row, 0).toString();
-        System.out.println(id);
-        boolean ketQua = nhapkhoService.xoa(id);
-        if (ketQua == true) {
-            JOptionPane.showMessageDialog(this, "Xóa ko thành công");
-        } else {
-            JOptionPane.showMessageDialog(this, "Xóa thành công");
-            loadTable();
-            clear();
-        }
+        xoa(tblTable.getValueAt(row, 0).toString());
     }//GEN-LAST:event_btnXoaActionPerformed
 
     private void btnClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearActionPerformed

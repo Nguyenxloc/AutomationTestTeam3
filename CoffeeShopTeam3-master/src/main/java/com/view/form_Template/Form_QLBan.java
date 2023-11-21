@@ -76,6 +76,58 @@ public class Form_QLBan extends javax.swing.JPanel {
         txtTenBan.setText("");
     }
 
+    public boolean themBan(int idBan, String tenBan){
+        boolean status = false;
+        QLBan b = new QLBan(idBan, tenBan);
+        if (b != null) {
+            banService.them(b);
+            loadTable();
+            clear();
+            status = true;
+        } else {
+            JOptionPane.showMessageDialog(this, "Thêm không thành công");
+            status = false;
+        }
+        return status;
+    }
+
+    public boolean suaBan(int idBan, String tenBan){
+        boolean  status = false;
+        QLBan b = new QLBan(idBan, tenBan);
+//        int row = tblBan.getSelectedRow();
+//        String idd = tblBan.getValueAt(row, 0).toString();
+//        int id = Integer.parseInt(idd);
+//        if( row ==-1){
+//            JOptionPane.showMessageDialog(this, " Chọn 1 dòng để Sửa");
+//            return;
+//        }
+        if (b != null) {
+            banService.sua(b);
+            loadTable();
+            clear();
+            status = true;
+        } else {
+            JOptionPane.showMessageDialog(this, " Sửa Không thành công");
+            status = false;
+        }
+        return status;
+    }
+
+    public boolean xoaBan(int idBan){
+        boolean status = false;
+        int row = tblBan.getSelectedRow();
+        if (row == -1) {
+            JOptionPane.showMessageDialog(this, " Chọn 1 dòng để xóa");
+            status = false;
+        } else {
+            banService.xoa(idBan);
+            loadTable();
+            clear();
+            status = true;
+        }
+        return status;
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -265,46 +317,16 @@ public class Form_QLBan extends javax.swing.JPanel {
     }//GEN-LAST:event_btnClearActionPerformed
 
     private void btnThemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThemActionPerformed
-        QLBan b = getForm();
-        if (b != null) {
-            banService.them(b);
-            loadTable();
-            clear();
-        } else {
-            JOptionPane.showMessageDialog(this, "Thêm không thành công");
-        }
+        themBan(Integer.parseInt(txtIdBan.getText()), txtTenBan.getText());
     }//GEN-LAST:event_btnThemActionPerformed
 
     private void btnSuaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSuaActionPerformed
-        QLBan b = getForm();
-//        int row = tblBan.getSelectedRow();
-//        String idd = tblBan.getValueAt(row, 0).toString();
-//        int id = Integer.parseInt(idd);
-//        if(row == -1){
-//            JOptionPane.showMessageDialog(this, " Chọn 1 dòng để Sửa");
-//            return;
-//        }
-        if (b != null) {
-            banService.sua(b);
-            loadTable();
-            clear();
-        } else {
-            JOptionPane.showMessageDialog(this, " Sửa Không thành công");
-        }
+        suaBan(Integer.parseInt(txtIdBan.getText()), txtTenBan.getText());
     }//GEN-LAST:event_btnSuaActionPerformed
 
     private void btnXoaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXoaActionPerformed
         int row = tblBan.getSelectedRow();
-        String id = tblBan.getValueAt(row, 0).toString();
-        int idd = Integer.parseInt(id);
-        if (row == -1) {
-            JOptionPane.showMessageDialog(this, " Chọn 1 dòng để xóa");
-            return;
-        } else {
-            banService.xoa(idd);
-            loadTable();
-            clear();
-        }
+        xoaBan(Integer.parseInt(tblBan.getValueAt(row, 0).toString()));
     }//GEN-LAST:event_btnXoaActionPerformed
 
     private void txtIdBanKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtIdBanKeyReleased
