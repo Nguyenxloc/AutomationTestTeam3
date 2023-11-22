@@ -227,20 +227,28 @@ public class Form_KhuyenMai extends javax.swing.JPanel {
     }
 
     // Chức năng update Khuyen Mai
-    public void updateKhuyenMai() {
+    public boolean updateKhuyenMai( int row,String maKM, String tenKM, String loaiKM, String giaTri, Date ngayBatDau, Date ngayKetThuc, String trangThai) {
 
-        int row = tblKhuyenMai.getSelectedRow();
+//        int row = tblKhuyenMai.getSelectedRow();
         if (row == -1) {
             JOptionPane.showMessageDialog(this, "Vui lòng chọn 1 khuyến mãi trên table");
-            return;
+            return false;
         }
 
-        if (validateFormUpdate()) {
-            String maKM = tblKhuyenMai.getValueAt(row, 0).toString();
-            KhuyenMai km = getFomr();
+        if (validateForm(maKM,tenKM,loaiKM,giaTri,ngayBatDau,ngayKetThuc,trangThai)) {
+//            String maKM = tblKhuyenMai.getValueAt(row, 0).toString();
+            KhuyenMai km = new KhuyenMai();
+            km.setMaKM(maKM);
+            km.setTenKM(tenKM);
+            km.setLoaiKM(loaiKM);
+            km.setGiaTri(Integer.parseInt(giaTri));
+            km.setNgayBatDau(ngayBatDau);
+            km.setNgayKetThuc(ngayKetThuc);
+            km.setTrangThai(trangThai);
+//            KhuyenMai km = getFomr();
             if (km == null) {
                 JOptionPane.showMessageDialog(this, "Lỗi trống dữ liệu");
-                return;
+                return false;
             }
             int choice = JOptionPane.showConfirmDialog(this, "Bạn có chắc chắn muốn sửa?", "Update", JOptionPane.YES_NO_OPTION);
             if (choice == JOptionPane.YES_OPTION) {
@@ -248,9 +256,12 @@ public class Form_KhuyenMai extends javax.swing.JPanel {
                 JOptionPane.showMessageDialog(this, "Sửa khuyến mãi thành công");
                 fillToTableKhuyenMai();
                 clearForm();
+                return true;
             }
 
         }
+
+        return true;
 
     }
 
@@ -953,7 +964,19 @@ public class Form_KhuyenMai extends javax.swing.JPanel {
 //    Nút sửa khuyến mãi
     private void btnCapNhat1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCapNhat1ActionPerformed
         // TODO add your handling code here:
-        updateKhuyenMai();
+
+
+                int row = tblKhuyenMai.getSelectedRow();
+                String maKM = tblKhuyenMai.getValueAt(row, 0).toString();
+                String tenKM = txtTenKM.getText().trim();
+                String loaiKM = "";
+                loaiKM = cboLoaiKM.getSelectedItem().toString();
+                String giaTri = txtGiaTriKM.getText().trim();
+                Date ngayBatDau = txtNgayBatDau.getDate();
+                Date ngayKetThuc = txtNgayKetThuc.getDate();
+                String trangThai =cboTrangThai.getSelectedItem().toString();
+
+        updateKhuyenMai(row,maKM,tenKM,loaiKM,giaTri,ngayBatDau,ngayKetThuc,trangThai);
     }//GEN-LAST:event_btnCapNhat1ActionPerformed
 
     private void tblKhuyenMaiMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblKhuyenMaiMouseClicked
