@@ -80,11 +80,38 @@ public class Form_TaoTaiKhoan extends javax.swing.JPanel {
     // Chức năng đăng ký form
     public Boolean createAccount(String tenNV, String gioiTinh, Date ngaySinh, String diaChi, String soDT, String matKhau, CapBac capBac, String taiKhoan) {
         Boolean status = false;
-        if (validateForm()) {
+        if (validateForm(tenNV, gioiTinh, ngaySinh, diaChi, soDT, matKhau, taiKhoan)) {
             int choice = JOptionPane.showConfirmDialog(this, "Bạn chắc chắn muốn tạo tài khoản?", "Create Account?", JOptionPane.YES_NO_OPTION);
             if (choice == JOptionPane.YES_OPTION) {
 
-                TaiKhoan createAcount = getFomr();
+                TaiKhoan createAcount = new TaiKhoan();
+                 tenNV = "";
+
+                createAcount.setTaiKhoan(taiKhoan);
+                createAcount.setTenNV(tenNV);
+                if (rdoNam.isSelected()) {
+                    gioiTinh = "Nam";
+                } else {
+                    gioiTinh = "Nữ";
+                }
+                try {
+                    SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+//                     ngaySinh = txtNgaySinh.getDate();
+                    createAcount.setNgaySinh(ngaySinh);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                createAcount.setMaNV("''");
+
+                createAcount.setGioiTinh(gioiTinh);
+                createAcount.setDiaChi(diaChi);
+                createAcount.setSoDT(soDT);
+                createAcount.setMatKhau(String.valueOf((matKhau)));
+                int count = cboCapBac.getSelectedIndex();
+                 capBac = listCapBac.get(count);
+                createAcount.setCapBac(capBac);
+
+
 
                 if (createAcount == null) {
                     JOptionPane.showMessageDialog(this, "Lỗi trống dữ liệu");
@@ -99,68 +126,67 @@ public class Form_TaoTaiKhoan extends javax.swing.JPanel {
         return status;
     }
 
-    public boolean validateForm() {
-        Boolean status = false;
+    public boolean validateForm(String tenNV, String gioiTinh, Date ngaySinh, String diaChi, String soDT, String matKhau, String taiKhoan) {
         // Validate để trống trường dữ liệu
-        if (txtUsername.getText().trim().equals("")) {
+        if (taiKhoan.equals("")) {
             JOptionPane.showMessageDialog(this, "Vui lòng nhập vào tên tài khoản");
             return false;
         }
 
         // Kiểm tra tên tài khoản không chứa ký tự đặc biệt
-        if (!isValidUsername(txtUsername.getText().trim())) {
+        if (!isValidUsername(taiKhoan)) {
             JOptionPane.showMessageDialog(this, "Tên tài khoản không được chứa ký tự đặc biệt");
             return false;
         }
 
         // Kiểm tra tên tài khoản đã tồn tại hay chưa
-        if (isUsernameAlreadyExists(txtUsername.getText().trim())) {
+        if (isUsernameAlreadyExists(taiKhoan)) {
             JOptionPane.showMessageDialog(this, "Tên tài khoản đã tồn tại");
             return false;
         }
 
-        if (txtHoTenNV.getText().trim().equals("")) {
+        if (tenNV.equals("")) {
             JOptionPane.showMessageDialog(this, "Vui lòng nhập vào họ tên nhân viên");
             return false;
         }
-        if (String.valueOf(txtPassword.getPassword()).trim().equals("")) {
+        if ((matKhau.equals(""))) {
             JOptionPane.showMessageDialog(this, "Vui lòng nhập vào mật khẩu");
             return false;
         }
-        if (String.valueOf(txtNgaySinh.getDate()).trim().equals("")) {
+        if (String.valueOf(ngaySinh).equals("")) {
             JOptionPane.showMessageDialog(this, "Vui lòng nhập vào ngày sinh");
             return false;
         }
-        if (txtSoDienThoai.getText().trim().equals("")) {
+        if (soDT.equals("")) {
             JOptionPane.showMessageDialog(this, "Vui lòng nhập vào số điện thoại");
             return false;
         }
-        if (txtDiaChi.getText().trim().equals("")) {
+        if (diaChi.equals("")) {
             JOptionPane.showMessageDialog(this, "Vui lòng nhập vào địa chỉ");
             return false;
         }
 
         // Validate Tên nhân viên đúng định dạng không chứa ký tự đặc biệt hoặc số
-        if (!isValidEmployeeName(txtHoTenNV.getText().trim())) {
+        if (!isValidEmployeeName(tenNV)) {
             JOptionPane.showMessageDialog(this, "Họ tên nhân viên không hợp lệ, vui lòng nhập lại");
             return false;
         }
 
         // Validate Phone đúng định dạng
-        String[] phoneNumbers = txtSoDienThoai.getText().trim().split(",");
+        String[] phoneNumbers = soDT.split(",");
         for (String phoneNumber : phoneNumbers) {
             if (!isValidPhoneNumber(phoneNumber.trim())) {
                 JOptionPane.showMessageDialog(this, "Số điện thoại không hợp lệ, vui lòng nhập lại số điện thoại hợp lệ");
                 return false;
             }
         }
-        String phoneNumber = txtSoDienThoai.getText().trim();
+        String phoneNumber = soDT;
         if (isPhoneNumberExists(phoneNumber)) {
             JOptionPane.showMessageDialog(this, "Số điện thoại đã tồn tại, vui lòng nhập lại số điện thoại");
             return false;
         }
         // Validate Password đúng định dạng
-        if (!isValidPassword(String.valueOf(txtPassword.getPassword()))) {
+        if (!isValidPassword(String.valueOf(matKhau))) {
             JOptionPane.showMessageDialog(this, "Mật khẩu không đủ mạnh. Vui lòng sử dụng ít nhất 8 ký tự và bao gồm cả chữ hoa, chữ thường và số");
             return false;
         }
@@ -458,7 +484,7 @@ public class Form_TaoTaiKhoan extends javax.swing.JPanel {
             gioiTinh = "Nữ";
         }
 //        SimpleDateFormat formater = new SimpleDateFormat("dd/MM/yyyy");
-        Date ngaySinh = new Date();
+        Date ngaySinh = txtNgaySinh.getDate();
 //        String strNgayS = formater.format(ngaySinh.getTime());
         String diaChi = txtDiaChi.getText();
         String soDT = txtSoDienThoai.getText();
@@ -466,14 +492,8 @@ public class Form_TaoTaiKhoan extends javax.swing.JPanel {
         int count = cboCapBac.getSelectedIndex();
         CapBac capBac = listCapBac.get(count);
 
-//        CapBac capBac = new CapBac();
-//        capBac.getTenCB();
-//        capBac.setTenCB(count);
+//
 
-
-
-// Lấy giá trị từ đối tượng CapBac
-//        String capBacValue = capBac.getTenCB();
         String taiKhoan = txtUsername.getText();
         createAccount(tenNV, gioiTinh,ngaySinh,diaChi,soDT, matKhau,capBac, taiKhoan);
         

@@ -97,19 +97,29 @@ public class Form_ChamCong extends javax.swing.JPanel implements Runnable {
         Date now = new Date();
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(now);
-        int hour = calendar.get(Calendar.HOUR_OF_DAY);
-        int minute = calendar.get(Calendar.MINUTE);
-        int second = calendar.get(Calendar.SECOND);
+         int hour = calendar.get(Calendar.HOUR_OF_DAY);
+         int minute = calendar.get(Calendar.MINUTE);
+         int second = calendar.get(Calendar.SECOND);
 
          String gioVao = String.format("%02d:%02d:%02d", hour, minute, second);
         txtGioVao.setText(gioVao);
     }
 
-    public boolean chamCongGioVao(NhanVien nv) {
+    public boolean chamCongGioVao( String ma, Date ngayVao, int hour, int minute, int second) {
         Boolean status = false;
-        if (validateData()) {
-            setTimeGioVao();
-             nv = nhanVineService.selectByMa(txtMaNhanVien.getText().trim());
+
+        if (validateData(ma)) {
+//             ngayVao = new Date();
+//            Calendar calendar = Calendar.getInstance();
+//            calendar.setTime(ngayVao);
+//            hour = calendar.get(Calendar.HOUR_OF_DAY);
+//             minute = calendar.get(Calendar.MINUTE);
+//             second = calendar.get(Calendar.SECOND);
+//
+//            String gioVao = String.format("%02d:%02d:%02d", hour, minute, second);
+//            txtGioVao.setText(gioVao);
+//            setTimeGioVao();
+             NhanVien nv = nhanVineService.selectByMa(ma);
 
             lblHoTenNV.setText(nv.getTen());
             lblGioiTinh.setText(nv.getGioiTinh());
@@ -129,7 +139,28 @@ public class Form_ChamCong extends javax.swing.JPanel implements Runnable {
             ImageIcon imageIcon = new ImageIcon(newimg);
             lblHinhAnh2.setIcon(imageIcon);
 
-            ChamCong chamCong = getFormGioVao();
+            ChamCong chamCong = new ChamCong();
+
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(ngayVao);
+
+
+            if (nv == null) {
+                JOptionPane.showMessageDialog(this, "Lỗi để trốn dữ liệu");
+               status = false;
+            }
+            chamCong.setNv(nv);
+
+            // Đặt giờ vào vào thuộc tính của đối tượng chamCong dưới dạng Date
+            Date gioVao = calendar.getTime();
+            Time gioVaoTime = new Time(gioVao.getTime());
+            chamCong.setGioVao(gioVaoTime);
+            Date ngay = calendar.getTime();
+
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+            String ngayString = dateFormat.format(ngay);
+
+
             if (chamCong == null) {
                 JOptionPane.showMessageDialog(this, "Lỗi để trống dữ liệu");
                 status = false;
@@ -150,9 +181,9 @@ public class Form_ChamCong extends javax.swing.JPanel implements Runnable {
         return status;
     }
 
-    public boolean chamCongGioRa(NhanVien nv) {
+    public boolean chamCongGioRa(NhanVien nv, String ma) {
         Boolean status = false;
-        if (validateData()) {
+        if (validateData(ma)) {
             //Lấy giờ hiện tại
             setTimeGioRa();
              nv = nhanVineService.selectByMa(txtMaNhanVien.getText().trim());
@@ -256,9 +287,9 @@ public class Form_ChamCong extends javax.swing.JPanel implements Runnable {
     }
 
     // vALIDATE DỮ LIỆU
-    private boolean validateData() {
-
-        if (txtMaNhanVien.getText().trim().equals("")) {
+    public boolean validateData(String ma) {
+            Boolean status = false;
+        if (ma.equals("")) {
             JOptionPane.showMessageDialog(this, "Vui lòng nhâp vào mã nhân viên");
             return false;
         }
@@ -574,14 +605,26 @@ public class Form_ChamCong extends javax.swing.JPanel implements Runnable {
 
     private void btnChamCongGioVaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnChamCongGioVaoActionPerformed
         // TODO add your handling code here:
-        NhanVien nv = nhanVineService.selectByMa(txtMaNhanVien.getText().trim());
-        chamCongGioVao(nv);
+//        NhanVien nv = nhanVineService.selectByMa(txtMaNhanVien.getText().trim());
+        String ma = txtMaNhanVien.getText().trim();
+        Date now = new Date();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(now);
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        int minute = calendar.get(Calendar.MINUTE);
+        int second = calendar.get(Calendar.SECOND);
+
+        String gioVao = String.format("%02d:%02d:%02d", hour, minute, second);
+        txtGioVao.setText(gioVao);
+        chamCongGioVao(ma, now, hour, minute, second);
     }//GEN-LAST:event_btnChamCongGioVaoActionPerformed
 
     private void ChamCongGioRaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ChamCongGioRaActionPerformed
         // TODO add your handling code here:
-        NhanVien nv = nhanVineService.selectByMa(txtMaNhanVien.getText().trim());
-        chamCongGioRa(nv);
+//        NhanVien nv = nhanVineService.selectByMa(txtMaNhanVien.getText().trim());
+        String ma = txtMaNhanVien.getText().trim();
+//        chamCongGioRa(ma);
+
     }//GEN-LAST:event_ChamCongGioRaActionPerformed
 
 
