@@ -8,12 +8,14 @@ import SingletonClass.LstHoaDonDangPhaChe_singleton;
 import SingletonClass.LstHoaDon_singleton;
 import SingletonClass.NV_singleton;
 import com.view.form_Template.Container;
+
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+
 import model.Ban;
 import model.HoaDon;
 import model.NhanVien;
@@ -21,7 +23,6 @@ import service.BanService;
 import service.HoaDonService;
 
 /**
- *
  * @author 84374
  */
 public class CreateBillPane extends javax.swing.JFrame {
@@ -51,15 +52,16 @@ public class CreateBillPane extends javax.swing.JFrame {
         lblTimeNow.setText(formatterTime.format(date));
     }
 
+
     public int validateTxt(String txt) {
         int max = banService.getMax();
         int stt = 0;
         try {
-            int txtNum = Integer.valueOf(txtBan.getText());
-            if (txtNum <= max&&txtNum>0) {
-                stt= 1;
+            int txtNum = Integer.valueOf(txt);
+            if (txtNum <= max && txtNum > 0) {
+                stt = 1;
             } else {
-                stt= 0;
+                stt = 0;
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -67,37 +69,41 @@ public class CreateBillPane extends javax.swing.JFrame {
         return stt;
     }
 
-    public void save() {
-        if(validateTxt(txtBan.getText())==1){
-              int idBan = Integer.valueOf(txtBan.getText());
-        Ban ban = banService.getBanByID(idBan);
-        NhanVien nv = NV_singleton.getInstance().nv;
-        HoaDon hoaDon = new HoaDon(null, ban, null, nv, null, null, null, 0, 0, null, 1, null);
-        HoaDon hoaDonAdded = hoaDonService.saveHoaDon(hoaDon);
-        LstHoaDon_singleton.getInstance().lstHoaDon.add(hoaDonAdded);
-        LstHoaDonDangPhaChe_singleton.getInstance().lstHoaDonDangPhaChe.add(hoaDonAdded);
-        DefaultTableModel modelHoaDon = new DefaultTableModel();
-        modelHoaDon = (DefaultTableModel) localTblHoaDon.getModel();
-        DefaultTableModel modelHoaDonDangPhaChe = new DefaultTableModel();
-        modelHoaDonDangPhaChe = (DefaultTableModel) localTblHoaDonDangPhaChe.getModel();
-        String thanhToanStt;
-        String phaCheStt;
-        if (hoaDonAdded.getTinhTrangThanhToan() == 0) {
-            thanhToanStt = "Chưa TT";
-        } else {
-            thanhToanStt = "Đã TT";
+    public boolean save(String tableNo) {
+        boolean stt = false;
+        if (validateTxt(tableNo) == 1) {
+            int idBan = Integer.valueOf(tableNo);
+            Ban ban = banService.getBanByID(idBan);
+            NhanVien nv = NV_singleton.getInstance().nv;
+            HoaDon hoaDon = new HoaDon(null, ban, null, nv, null, null, null, 0, 0, null, 1, null);
+            HoaDon hoaDonAdded = hoaDonService.saveHoaDon(hoaDon);
+            LstHoaDon_singleton.getInstance().lstHoaDon.add(hoaDonAdded);
+            LstHoaDonDangPhaChe_singleton.getInstance().lstHoaDonDangPhaChe.add(hoaDonAdded);
+            DefaultTableModel modelHoaDon = new DefaultTableModel();
+            modelHoaDon = (DefaultTableModel) localTblHoaDon.getModel();
+            DefaultTableModel modelHoaDonDangPhaChe = new DefaultTableModel();
+            modelHoaDonDangPhaChe = (DefaultTableModel) localTblHoaDonDangPhaChe.getModel();
+            String thanhToanStt;
+            String phaCheStt;
+            if (hoaDonAdded.getTinhTrangThanhToan() == 0) {
+                thanhToanStt = "Chưa TT";
+            } else {
+                thanhToanStt = "Đã TT";
+            }
+            if (hoaDonAdded.getTrangThaiPhaChe() == 0) {
+                phaCheStt = "Chưa pha";
+            } else {
+                phaCheStt = "Đã pha";
+            }
+            modelHoaDon.addRow(new Object[]{LstHoaDon_singleton.getInstance().lstHoaDon.size(), hoaDonAdded.getMa(), hoaDonAdded.getBan().getTen(), thanhToanStt, phaCheStt});
+            modelHoaDonDangPhaChe.addRow(new Object[]{LstHoaDonDangPhaChe_singleton.getInstance().lstHoaDonDangPhaChe.size(), hoaDonAdded.getMa(), hoaDonAdded.getBan().getTen(), thanhToanStt, phaCheStt});
+            this.dispose();
+            stt = true;
+        } else{
+            JOptionPane.showMessageDialog(null, "Bàn không tồn tại trong hệ thống !");
+            stt = false;
         }
-        if (hoaDonAdded.getTrangThaiPhaChe() == 0) {
-            phaCheStt = "Chưa pha";
-        } else {
-            phaCheStt = "Đã pha";
-        }
-        modelHoaDon.addRow(new Object[]{LstHoaDon_singleton.getInstance().lstHoaDon.size(), hoaDonAdded.getMa(), hoaDonAdded.getBan().getTen(), thanhToanStt, phaCheStt});
-        modelHoaDonDangPhaChe.addRow(new Object[]{LstHoaDonDangPhaChe_singleton.getInstance().lstHoaDonDangPhaChe.size(), hoaDonAdded.getMa(), hoaDonAdded.getBan().getTen(), thanhToanStt, phaCheStt});
-        this.dispose();
-        }
-        else
-            JOptionPane.showMessageDialog(null,"Bàn không tồn tại trong hệ thống !");
+        return stt;
     }
 
     /**
@@ -178,83 +184,83 @@ public class CreateBillPane extends javax.swing.JFrame {
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGap(21, 21, 21)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel5)
-                            .addComponent(jLabel6)
-                            .addComponent(jLabel3)
-                            .addComponent(jLabel4)
-                            .addComponent(jLabel2))
-                        .addGap(26, 26, 26)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtBan)
-                            .addComponent(lblTimeNow)
-                            .addComponent(lblTenNV)
-                            .addComponent(lblMaNV)
-                            .addComponent(lblDateNow)))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(20, 20, 20)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jButton2)))
-                .addGap(22, 22, 22))
+                jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                .addGap(21, 21, 21)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(jPanel1Layout.createSequentialGroup()
+                                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                        .addComponent(jLabel5)
+                                                        .addComponent(jLabel6)
+                                                        .addComponent(jLabel3)
+                                                        .addComponent(jLabel4)
+                                                        .addComponent(jLabel2))
+                                                .addGap(26, 26, 26)
+                                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                        .addComponent(txtBan)
+                                                        .addComponent(lblTimeNow)
+                                                        .addComponent(lblTenNV)
+                                                        .addComponent(lblMaNV)
+                                                        .addComponent(lblDateNow)))
+                                        .addGroup(jPanel1Layout.createSequentialGroup()
+                                                .addGap(20, 20, 20)
+                                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addGap(0, 0, Short.MAX_VALUE))
+                                        .addGroup(jPanel1Layout.createSequentialGroup()
+                                                .addGap(0, 0, Short.MAX_VALUE)
+                                                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addGap(18, 18, 18)
+                                                .addComponent(jButton2)))
+                                .addGap(22, 22, 22))
         );
 
-        jPanel1Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {jButton1, jButton2});
+        jPanel1Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[]{jButton1, jButton2});
 
         jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(17, 17, 17)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(txtBan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel5)
-                    .addComponent(lblMaNV))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel6)
-                    .addComponent(lblTenNV))
-                .addGap(23, 23, 23)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(lblDateNow))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel4)
-                    .addComponent(lblTimeNow))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2))
-                .addContainerGap(21, Short.MAX_VALUE))
+                jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(17, 17, 17)
+                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(jLabel2)
+                                        .addComponent(txtBan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(18, 18, 18)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(jLabel5)
+                                        .addComponent(lblMaNV))
+                                .addGap(18, 18, 18)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(jLabel6)
+                                        .addComponent(lblTenNV))
+                                .addGap(23, 23, 23)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(jLabel3)
+                                        .addComponent(lblDateNow))
+                                .addGap(18, 18, 18)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(jLabel4)
+                                        .addComponent(lblTimeNow))
+                                .addGap(18, 18, 18)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(jButton1)
+                                        .addComponent(jButton2))
+                                .addContainerGap(21, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         pack();
@@ -267,8 +273,9 @@ public class CreateBillPane extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
+        String tableNo = txtBan.getText();
         try {
-            save();
+            save(tableNo);
         } catch (Exception e) {
             e.printStackTrace();
         }

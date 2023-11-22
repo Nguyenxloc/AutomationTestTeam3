@@ -68,6 +68,38 @@ public class Form_BanHang extends javax.swing.JPanel {
     private DefaultTableModel modelHoaDonDangPhaCheTbl = new DefaultTableModel();
     private DefaultTableModel modelHoaDonChoTbl = new DefaultTableModel();
 
+    public JTable getTblDrinkDetail() {
+        return tblDrinkDetail;
+    }
+
+    public JLabel getLblTotalCash() {
+        return lblTotalCash;
+    }
+
+    public HoaDon getLocalHoaDon() {
+        return localHoaDon;
+    }
+
+    public ArrayList<ChiTietDoUong> getLstChiTietDoUongs() {
+        return lstChiTietDoUongs;
+    }
+
+    public void setLstChiTietDoUongs(ArrayList<ChiTietDoUong> lstChiTietDoUongs) {
+        this.lstChiTietDoUongs = lstChiTietDoUongs;
+    }
+
+    public void setLocalHoaDon(HoaDon localHoaDon) {
+        this.localHoaDon = localHoaDon;
+    }
+
+    public void setLblTotalCash(JLabel lblTotalCash) {
+        this.lblTotalCash = lblTotalCash;
+    }
+
+    public void setTblDrinkDetail(JTable tblDrinkDetail) {
+        this.tblDrinkDetail = tblDrinkDetail;
+    }
+
     /**
      * Creates new form Form_QlThongTinSV
      */
@@ -246,20 +278,28 @@ public class Form_BanHang extends javax.swing.JPanel {
 
     }
 
-    public void moveToHoaDonChoTbl() {
-        HoaDon hoaDon = LstHoaDon_singleton.getInstance().lstHoaDon.get(countHoaDonTbl);
-        if (countHoaDonTbl != -1) {
-            hoaDonService.updateStt(0, LstHoaDon_singleton.getInstance().lstHoaDon.get(countHoaDonTbl).getId());
-        }
+    public boolean moveToHoaDonChoTbl() {
+        boolean stt = false;
+        try {
+            HoaDon hoaDon = LstHoaDon_singleton.getInstance().lstHoaDon.get(countHoaDonTbl);
+            if (countHoaDonTbl != -1) {
+                hoaDonService.updateStt(0, LstHoaDon_singleton.getInstance().lstHoaDon.get(countHoaDonTbl).getId());
+            }
 //        int count = tblHoaDon.getSelectedRow();
-        LstHoaDon_singleton.getInstance().lstHoaDon.get(countHoaDonTbl).setStt(0);
-        pushToArray(LstHoaDonCho_SingLeTon.getInstance().lstHoaDonCho, LstHoaDon_singleton.getInstance().lstHoaDon.get(countHoaDonTbl));
-        addToTblAtLast(modelHoaDonChoTbl, LstHoaDon_singleton.getInstance().lstHoaDon.get(countHoaDonTbl));
-        removeToTblAtIndex(modelHoaDonTbl, countHoaDonTbl);
-        popArrayAtIndex(LstHoaDon_singleton.getInstance().lstHoaDon, countHoaDonTbl);
-        //remove list hoa don dang pha che
-        removeToTblAtMaHD(modelHoaDonDangPhaCheTbl, hoaDon.getMa());
-
+            LstHoaDon_singleton.getInstance().lstHoaDon.get(countHoaDonTbl).setStt(0);
+            pushToArray(LstHoaDonCho_SingLeTon.getInstance().lstHoaDonCho, LstHoaDon_singleton.getInstance().lstHoaDon.get(countHoaDonTbl));
+            addToTblAtLast(modelHoaDonChoTbl, LstHoaDon_singleton.getInstance().lstHoaDon.get(countHoaDonTbl));
+            removeToTblAtIndex(modelHoaDonTbl, countHoaDonTbl);
+            popArrayAtIndex(LstHoaDon_singleton.getInstance().lstHoaDon, countHoaDonTbl);
+            //remove list hoa don dang pha che
+            removeToTblAtMaHD(modelHoaDonDangPhaCheTbl, hoaDon.getMa());
+            stt = true;
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            stt = false;
+        }
+        return  stt;
     }
 
     public void moveToHoaDon() {
@@ -307,37 +347,45 @@ public class Form_BanHang extends javax.swing.JPanel {
     public void LoadlstProduct() {
         lstChiTietDoUongs.clear();
         lstChiTietDoUongs = LstChiTietDoUong_singleton.getInstance().lstChiTietDoUongs;
+        System.out.println("lstproduct"+lstChiTietDoUongs);
         reLoadProduct();
     }
 
-    public void showDetailHoaDonTab() {
-        tblHoaDonCho.clearSelection();
-        tblDangPhaChe.clearSelection();
-        tblHoaDonCho.clearSelection();
-        tblDangPhaChe.clearSelection();
-        countHoaDonDangPhaCheTbl = -1;
-        countHoaDonChoTbl = -1;
-        countHoaDonTbl = tblHoaDon.getSelectedRow();
-        String checkStt;
-        lblMaHD.setText(LstHoaDon_singleton.getInstance().lstHoaDon.get(countHoaDonTbl).getMa());
-        lblBan.setText(LstHoaDon_singleton.getInstance().lstHoaDon.get(countHoaDonTbl).getBan().getTen());
-        lblTime.setText(LstHoaDon_singleton.getInstance().lstHoaDon.get(countHoaDonTbl).getThoiGian());
-        lblMaNV.setText(LstHoaDon_singleton.getInstance().lstHoaDon.get(countHoaDonTbl).getNhanVien().getMa());
-        lblTenNV.setText(LstHoaDon_singleton.getInstance().lstHoaDon.get(countHoaDonTbl).getNhanVien().getTen());
-        if (LstHoaDon_singleton.getInstance().lstHoaDon.get(countHoaDonTbl).getTinhTrangThanhToan() == 0) {
-            checkStt = "Chưa thanh toán";
-        } else {
-            checkStt = "Đã thanh toán";
+    public boolean showDetailHoaDonTab(int selectionNum) {
+        try {
+            tblHoaDonCho.clearSelection();
+            tblDangPhaChe.clearSelection();
+            tblHoaDonCho.clearSelection();
+            tblDangPhaChe.clearSelection();
+            countHoaDonDangPhaCheTbl = -1;
+            countHoaDonChoTbl = -1;
+            countHoaDonTbl = selectionNum;
+            String checkStt;
+            lblMaHD.setText(LstHoaDon_singleton.getInstance().lstHoaDon.get(countHoaDonTbl).getMa());
+            lblBan.setText(LstHoaDon_singleton.getInstance().lstHoaDon.get(countHoaDonTbl).getBan().getTen());
+            lblTime.setText(LstHoaDon_singleton.getInstance().lstHoaDon.get(countHoaDonTbl).getThoiGian());
+            lblMaNV.setText(LstHoaDon_singleton.getInstance().lstHoaDon.get(countHoaDonTbl).getNhanVien().getMa());
+            lblTenNV.setText(LstHoaDon_singleton.getInstance().lstHoaDon.get(countHoaDonTbl).getNhanVien().getTen());
+            if (LstHoaDon_singleton.getInstance().lstHoaDon.get(countHoaDonTbl).getTinhTrangThanhToan() == 0) {
+                checkStt = "Chưa thanh toán";
+            } else {
+                checkStt = "Đã thanh toán";
+            }
+            lblCheckStt.setText(checkStt);
+            lblDate.setText(LstHoaDon_singleton.getInstance().lstHoaDon.get(countHoaDonTbl).getNgayTao().toString());
+            if (LstHoaDon_singleton.getInstance().lstHoaDon.get(countHoaDonTbl).getStt() == 0) {
+                lblStt.setText("Chờ");
+            } else {
+                lblStt.setText("Xử lý");
+            }
+            IdHD_singleton.getInstance().id = LstHoaDon_singleton.getInstance().lstHoaDon.get(countHoaDonTbl).getId();
+            IdHD_singleton.getInstance().maHD = LstHoaDon_singleton.getInstance().lstHoaDon.get(countHoaDonTbl).getMa();
+            return true;
         }
-        lblCheckStt.setText(checkStt);
-        lblDate.setText(LstHoaDon_singleton.getInstance().lstHoaDon.get(countHoaDonTbl).getNgayTao().toString());
-        if (LstHoaDon_singleton.getInstance().lstHoaDon.get(countHoaDonTbl).getStt() == 0) {
-            lblStt.setText("Chờ");
-        } else {
-            lblStt.setText("Xử lý");
+        catch(Exception e){
+            e.printStackTrace();
+            return false;
         }
-        IdHD_singleton.getInstance().id = LstHoaDon_singleton.getInstance().lstHoaDon.get(countHoaDonTbl).getId();
-        IdHD_singleton.getInstance().maHD = LstHoaDon_singleton.getInstance().lstHoaDon.get(countHoaDonTbl).getMa();
     }
 
     public void showDetailHoaDonTab_Waiting() {
@@ -401,26 +449,30 @@ public class Form_BanHang extends javax.swing.JPanel {
         IdHD_singleton.getInstance().maHD = LstHoaDonDangPhaChe_singleton.getInstance().lstHoaDonDangPhaChe.get(countHoaDonDangPhaCheTbl).getMa();
     }
 
-    public void showLstDrink() {
-        lstDetailBillBuffer = new ArrayList<>();
-        double cellCheck = 0;
-        double totalCheck = 0;
-        int stt = 0;
-        DefaultTableModel model = new DefaultTableModel();
-        model = (DefaultTableModel) tblDrinkDetail.getModel();
-        model.setRowCount(0);
-        DecimalFormat formatter = new DecimalFormat("###,###,###");
-        for (HoaDonChiTietNoIMG hdChiTiet : LstHoaDonChiTiet_singleton.getInstance().lstHoaDonChiTietNoIMG) {
-            if (hdChiTiet.getHoaDon().getId().equalsIgnoreCase(IdHD_singleton.getInstance().id)) {
-                stt++;
-                cellCheck = Double.valueOf(hdChiTiet.getSoLuong()) * Double.valueOf(hdChiTiet.getChiTietDoUongNoIMG().getGiaBan());
-                totalCheck += cellCheck;
-                model.addRow(new Object[]{stt, hdChiTiet.getChiTietDoUongNoIMG().getTenDoUong(), hdChiTiet.getSoLuong(),
-                    formatter.format(hdChiTiet.getChiTietDoUongNoIMG().getGiaBan()), formatter.format(cellCheck)});
-                lstDetailBillBuffer.add(hdChiTiet);
+    public boolean showLstDrink() {
+        try {
+            double cellCheck = 0;
+            double totalCheck = 0;
+            int stt = 0;
+            DefaultTableModel model = new DefaultTableModel();
+            model = (DefaultTableModel) tblDrinkDetail.getModel();
+            model.setRowCount(0);
+            DecimalFormat formatter = new DecimalFormat("###,###,###");
+            for (HoaDonChiTietNoIMG hdChiTiet : LstHoaDonChiTiet_singleton.getInstance().lstHoaDonChiTietNoIMG) {
+                if (hdChiTiet.getHoaDon().getId().equalsIgnoreCase(IdHD_singleton.getInstance().id)) {
+                    stt++;
+                    cellCheck = Double.valueOf(hdChiTiet.getSoLuong()) * Double.valueOf(hdChiTiet.getChiTietDoUongNoIMG().getGiaBan());
+                    totalCheck += cellCheck;
+                    model.addRow(new Object[]{stt, hdChiTiet.getChiTietDoUongNoIMG().getTenDoUong(), hdChiTiet.getSoLuong(),
+                            formatter.format(hdChiTiet.getChiTietDoUongNoIMG().getGiaBan()), formatter.format(cellCheck)});
+                    lstDetailBillBuffer.add(hdChiTiet);
+                }
             }
+            lblTotalCash.setText(formatter.format(totalCheck) + "VNĐ");
+            return true;
+        } catch (Exception e) {
+            return false;
         }
-        lblTotalCash.setText(formatter.format(totalCheck) + "VNĐ");
     }
 
     public void updateDetailBill() {
@@ -930,7 +982,8 @@ public class Form_BanHang extends javax.swing.JPanel {
         // TODO add your handling code here:
         countHoaDonChiTietTbl = -1;
         countHoaDonChoTbl = -1;
-        showDetailHoaDonTab();
+        int selectionNum = tblHoaDon.getSelectedRow();
+        showDetailHoaDonTab(selectionNum);
         showLstDrink();
         System.out.println(LstHoaDon_singleton.getInstance().lstHoaDon.get(countHoaDonTbl));
     }//GEN-LAST:event_tblHoaDonMouseClicked
@@ -1048,9 +1101,9 @@ public class Form_BanHang extends javax.swing.JPanel {
     private javax.swing.JLabel lblTenNV;
     private javax.swing.JLabel lblTime;
     private javax.swing.JLabel lblTotalCash;
-    private javax.swing.JTable tblDangPhaChe;
+    public javax.swing.JTable tblDangPhaChe;
     private javax.swing.JTable tblDrinkDetail;
-    private javax.swing.JTable tblHoaDon;
+    public javax.swing.JTable tblHoaDon;
     private javax.swing.JTable tblHoaDonCho;
     // End of variables declaration//GEN-END:variables
 
