@@ -60,7 +60,7 @@ public class Form_ChamCong extends javax.swing.JPanel implements Runnable {
 
     }
 
-    private void setForm() {
+    public void setForm() {
         // Lấy ngày và thời gian hiện tại
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(now);
@@ -79,7 +79,7 @@ public class Form_ChamCong extends javax.swing.JPanel implements Runnable {
 
     }
 
-    private void setTimeGioRa() {
+    public void setTimeGioRa() {
         // Lấy ngày và thời gian hiện tại
         Date now = new Date();
         Calendar calendar = Calendar.getInstance();
@@ -91,8 +91,8 @@ public class Form_ChamCong extends javax.swing.JPanel implements Runnable {
         String gioRa = String.format("%02d:%02d:%02d", hour, minute, second);
         txtGioRa.setText(gioRa);
     }
-    
-     private void setTimeGioVao() {
+
+    public void setTimeGioVao() {
         // Lấy ngày và thời gian hiện tại
         Date now = new Date();
         Calendar calendar = Calendar.getInstance();
@@ -105,10 +105,11 @@ public class Form_ChamCong extends javax.swing.JPanel implements Runnable {
         txtGioVao.setText(gioVao);
     }
 
-    private void chamCongGioVao() {
+    public boolean chamCongGioVao(NhanVien nv) {
+        Boolean status = false;
         if (validateData()) {
             setTimeGioVao();
-            NhanVien nv = nhanVineService.selectByMa(txtMaNhanVien.getText().trim());
+             nv = nhanVineService.selectByMa(txtMaNhanVien.getText().trim());
 
             lblHoTenNV.setText(nv.getTen());
             lblGioiTinh.setText(nv.getGioiTinh());
@@ -131,6 +132,7 @@ public class Form_ChamCong extends javax.swing.JPanel implements Runnable {
             ChamCong chamCong = getFormGioVao();
             if (chamCong == null) {
                 JOptionPane.showMessageDialog(this, "Lỗi để trống dữ liệu");
+                status = false;
             }
 
             int choice = JOptionPane.showConfirmDialog(this, "Xác thực chấm công giờ vào", "Accuracy?", JOptionPane.YES_NO_OPTION);
@@ -139,18 +141,21 @@ public class Form_ChamCong extends javax.swing.JPanel implements Runnable {
                 chamCongService.save(chamCong);
                 JOptionPane.showMessageDialog(this, "Chấm công giờ vào thành công");
                 clearForm();
+                status = true;
             } else {
                 clearForm();
+                status = true;
             }
         }
-
+        return status;
     }
 
-    private void chamCongGioRa() {
+    public boolean chamCongGioRa(NhanVien nv) {
+        Boolean status = false;
         if (validateData()) {
             //Lấy giờ hiện tại
             setTimeGioRa();
-            NhanVien nv = nhanVineService.selectByMa(txtMaNhanVien.getText().trim());
+             nv = nhanVineService.selectByMa(txtMaNhanVien.getText().trim());
             lblHoTenNV.setText(nv.getTen());
             lblGioiTinh.setText(nv.getGioiTinh());
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy");
@@ -172,6 +177,7 @@ public class Form_ChamCong extends javax.swing.JPanel implements Runnable {
             ChamCong chamCong = getFormGioRa();
             if (chamCong == null) {
                 JOptionPane.showMessageDialog(this, "Lỗi để trống dữ liệu");
+                status = false;
             }
 
             int choice = JOptionPane.showConfirmDialog(this, "Xác thực chấm công giờ ra", "Accuracy?", JOptionPane.YES_NO_OPTION);
@@ -181,15 +187,17 @@ public class Form_ChamCong extends javax.swing.JPanel implements Runnable {
                 chamCongService.update(idChamCong, chamCong);
                 JOptionPane.showMessageDialog(this, "Chấm công giờ Ra thành công");
                 clearForm();
+                status = true;
             } else {
                 clearForm();
+                status = true;
             }
 
         }
-
+        return status;
     }
 
-    private ChamCong getFormGioVao() {
+    public ChamCong getFormGioVao() {
         ChamCong chamCong = new ChamCong();
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(now);
@@ -223,7 +231,7 @@ public class Form_ChamCong extends javax.swing.JPanel implements Runnable {
 
     }
 
-    private ChamCong getFormGioRa() {
+    public ChamCong getFormGioRa() {
         ChamCong chamCong = new ChamCong();
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(now);
@@ -566,12 +574,14 @@ public class Form_ChamCong extends javax.swing.JPanel implements Runnable {
 
     private void btnChamCongGioVaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnChamCongGioVaoActionPerformed
         // TODO add your handling code here:
-        chamCongGioVao();
+        NhanVien nv = nhanVineService.selectByMa(txtMaNhanVien.getText().trim());
+        chamCongGioVao(nv);
     }//GEN-LAST:event_btnChamCongGioVaoActionPerformed
 
     private void ChamCongGioRaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ChamCongGioRaActionPerformed
         // TODO add your handling code here:
-        chamCongGioRa();
+        NhanVien nv = nhanVineService.selectByMa(txtMaNhanVien.getText().trim());
+        chamCongGioRa(nv);
     }//GEN-LAST:event_ChamCongGioRaActionPerformed
 
 
