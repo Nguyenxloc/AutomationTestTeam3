@@ -98,7 +98,124 @@ public class Form_CapBac extends javax.swing.JPanel {
         txtTen.setText("");
         txtLuong.setText("");
     }
-    
+
+
+    public boolean checkingThem(String ma, String ten,String luog){
+
+        boolean status = false;
+        if(ma.trim().equals("") || ten.trim().equals("")){
+            JOptionPane.showMessageDialog(this, "Không được để trống");
+            return false;
+        }
+
+        if(!ma.matches("[a-zA-Z0-9]+$")){
+            JOptionPane.showMessageDialog(this, "Mã không hợp lệ");
+            return false;
+        }
+
+        if(ten.trim().length() != ten.length()){
+            JOptionPane.showMessageDialog(this, "Tên không hợp lệ");
+            return false;
+        }
+
+        if(!ten.matches("^[\\p{L}\\p{M}0-9 ]+$")){
+            JOptionPane.showMessageDialog(this, "Tên không hợp lệ");
+            return false;
+        }
+
+        BigDecimal luong = null;
+        if(!luog.trim().isEmpty()){
+            try {
+                luong = new BigDecimal(luog);
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(this, "Nhập lương không hợp lệ");
+                return false;
+            }
+        }
+
+        QLCapBac cb = new QLCapBac();
+        cb.setMaCB(ma);
+        cb.setTenCB(ten);
+        if(luong != null){
+            cb.setLuongPastTime(luong);
+        }
+
+        if(cb != null){
+            capBacService.them(cb);
+            loadTable();
+            clear();
+            JOptionPane.showMessageDialog(this, "Thêm thành công");
+            return true;
+        }else{
+            JOptionPane.showMessageDialog(this, "Thêm không thành công");
+            return false;
+        }
+
+    }
+
+
+    public boolean checkingUpdate(String id,String ma, String ten,String luog){
+
+        if(ma.trim().equals("") || ten.trim().equals("")){
+            JOptionPane.showMessageDialog(this, "Không được để trống");
+            return false;
+        }
+
+        if(!ma.matches("[a-zA-Z0-9]+$")){
+            JOptionPane.showMessageDialog(this, "Mã không hợp lệ");
+            return false;
+        }
+
+        if(ten.trim().length() != ten.length()){
+            JOptionPane.showMessageDialog(this, "Tên không hợp lệ");
+            return false;
+        }
+
+        if(!ten.matches("^[\\p{L}\\p{M}0-9 ]+$")){
+            JOptionPane.showMessageDialog(this, "Tên không hợp lệ");
+            return false;
+        }
+
+        BigDecimal luong = null;
+        if(!luog.trim().isEmpty()){
+            try {
+                luong = new BigDecimal(luog);
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(this, "Nhập lương không hợp lệ");
+                return false;
+            }
+        }
+
+        QLCapBac cb = new QLCapBac();
+        cb.setMaCB(ma);
+        cb.setTenCB(ten);
+        if(luong != null){
+            cb.setLuongPastTime(luong);
+        }
+
+        if(cb != null){
+            capBacService.sua(cb, id);
+            loadTable();
+            clear();
+            return true;
+        }else{
+            JOptionPane.showMessageDialog(this, "Sửa không thành công");
+            return false;
+        }
+
+    }
+
+    public boolean checkingDelete(String id){
+        JOptionPane.showMessageDialog(this, "Xóa thành công");
+        capBacService.xoa(id);
+        loadTable();
+        clear();
+        return true;
+    }
+
+
+
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -297,49 +414,64 @@ public class Form_CapBac extends javax.swing.JPanel {
     }//GEN-LAST:event_tblTableMouseClicked
 
     private void btnXoaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXoaActionPerformed
+//        int row = tblTable.getSelectedRow();
+//        String id = tblTable.getValueAt(row, 0).toString();
+//        if(row == -1){
+//            JOptionPane.showMessageDialog(this, "Chọn 1 dòng để xóa");
+//            return ;
+//        }else{
+//            JOptionPane.showMessageDialog(this, "Xóa thành công");
+//            capBacService.xoa(id);
+//            loadTable();
+//            clear();
+//        }
+
         int row = tblTable.getSelectedRow();
         String id = tblTable.getValueAt(row, 0).toString();
-        if(row == -1){
-            JOptionPane.showMessageDialog(this, "Chọn 1 dòng để xóa");
-            return ;
-        }else{
-            JOptionPane.showMessageDialog(this, "Xóa thành công");
-            capBacService.xoa(id);
-            loadTable();
-            clear();
-        }
+        checkingDelete(id);
 
     }//GEN-LAST:event_btnXoaActionPerformed
 
     private void btnSuaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSuaActionPerformed
-        QLCapBac ld = getForm();
-        int row = tblTable.getSelectedRow();
-        String id = tblTable.getValueAt(row, 0).toString();
+//        QLCapBac ld = getForm();
+//        int row = tblTable.getSelectedRow();
+//        String id = tblTable.getValueAt(row, 0).toString();
+//
+//        if(row == -1){
+//            JOptionPane.showMessageDialog(this, "Chọn 1 dòng để sửa");
+//            return;
+//        }
+//        if(ld != null){
+//            capBacService.sua(ld, id);
+//            loadTable();
+//            clear();
+//        }else{
+//            JOptionPane.showMessageDialog(this, "Sửa không thành công");
+//        }
 
-        if(row == -1){
-            JOptionPane.showMessageDialog(this, "Chọn 1 dòng để sửa");
-            return;
-        }
-        if(ld != null){
-            capBacService.sua(ld, id);
-            loadTable();
-            clear();
-        }else{
-            JOptionPane.showMessageDialog(this, "Sửa không thành công");
-        }
+        String id = txtID.getText();
+        String ma = txtMa.getText();
+        String ten = txtTen.getText();
+        String luog = txtLuong.getText();
+        checkingUpdate(id,ma,ten,luog);
 
     }//GEN-LAST:event_btnSuaActionPerformed
 
     private void btnThemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThemActionPerformed
-        QLCapBac ql = getForm();
+//        QLCapBac ql = getForm();
+//
+//        if(ql != null){
+//            capBacService.them(ql);
+//            loadTable();
+//            clear();
+//        }else{
+//            JOptionPane.showMessageDialog(this, "Thêm không thành công");
+//        }
 
-        if(ql != null){
-            capBacService.them(ql);
-            loadTable();
-            clear();
-        }else{
-            JOptionPane.showMessageDialog(this, "Thêm không thành công");
-        }
+        String ma = txtMa.getText();
+        String ten = txtTen.getText();
+        String luog = txtLuong.getText();
+        checkingThem(ma,ten,luog);
 
     }//GEN-LAST:event_btnThemActionPerformed
 
