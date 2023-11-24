@@ -19,43 +19,43 @@ public class Form_TaoTaiKhoanTest extends TestCase {
         capBac.setTenCB("Nhân viên order");
 
         // Tạo một đối tượng LocalDate
-        String ngaySinh = "23-11-2023"; // Chuỗi ngày cần chuyển đổi
+        String ngSinh = "09-09-2023"; // Chuỗi ngày cần chuyển đổi
 
         DateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy");
-        Date ngayBatDau = null;
+        Date ngaySinh = null;
 
         try {
-            ngayBatDau = simpleDateFormat.parse(ngaySinh);
+            ngaySinh = simpleDateFormat.parse(ngSinh);
         } catch (ParseException e) {
             e.printStackTrace();
         }
 
         // Chắc chắn rằng createAccount trả về boolean
-        boolean result = form_taoTaiKhoan.createAccount("Đỗ Thị Hải", "Nữ", ngayBatDau, "Hà Nội", "0987654321", "Hai0987654321", capBac, "haihaihuoc");
+        boolean result = form_taoTaiKhoan.createAccount("Đỗ Văn Tuấn", "Nam", ngaySinh, "Hà Nội", "0989767854", "Tuan8907654321", capBac, "tuandovan1");
 
         assertEquals(true, result);
 
     }
 
-    public void testCreateAccount_null() {
+    public void testCreateAccount_khongthanhcong() {
         Form_TaoTaiKhoan form_taoTaiKhoan = new Form_TaoTaiKhoan();
         CapBac capBac = new CapBac();
         capBac.setTenCB("Nhân viên order");
 
         // Tạo một đối tượng LocalDate
-        String ngaySinh = "23-11-2023"; // Chuỗi ngày cần chuyển đổi
+        String ngSinh = "09-11-2023"; // Chuỗi ngày cần chuyển đổi
 
         DateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy");
-        Date ngayBatDau = null;
+        Date ngaySinh = null;
 
         try {
-            ngayBatDau = simpleDateFormat.parse(ngaySinh);
+            ngaySinh = simpleDateFormat.parse(ngSinh);
         } catch (ParseException e) {
             e.printStackTrace();
         }
 
         // Chắc chắn rằng createAccount trả về boolean
-        boolean result = form_taoTaiKhoan.createAccount("", "Nữ", ngayBatDau, "Hà Nội", "0987654321", "Hai0987654321", capBac, "duyHung");
+        boolean result = form_taoTaiKhoan.createAccount("Đỗ Thị Nhung", "Nữ", ngaySinh, "Thanh Hóa", "0987654367", "Nhung0967543567", capBac, "Nhungdzzzz");
 
         assertEquals(false, result);
 
