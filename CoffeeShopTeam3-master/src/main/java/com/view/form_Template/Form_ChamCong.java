@@ -186,8 +186,7 @@ public class Form_ChamCong extends javax.swing.JPanel implements Runnable {
         Boolean status = false;
         if (validateData(ma)) {
             //Lấy giờ hiện tại
-            setTimeGioRa();
-             NhanVien nv = nhanVineService.selectByMa(ma);
+            NhanVien nv = nhanVineService.selectByMa(ma);
             lblHoTenNV.setText(nv.getTen());
             lblGioiTinh.setText(nv.getGioiTinh());
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy");
@@ -214,6 +213,7 @@ public class Form_ChamCong extends javax.swing.JPanel implements Runnable {
             chamCong.setNv(nv);
             Date gioVao = calendar.getTime();
             Time gioVaoTime = new Time(gioVao.getTime());
+
             ChamCong chamCong2 = chamCongService.selectByID(gioVaoTime);
             chamCong.setIdChamCong(chamCong2.getIdChamCong());
             chamCong.setGioVao(chamCong2.getGioVao());
@@ -311,12 +311,11 @@ public class Form_ChamCong extends javax.swing.JPanel implements Runnable {
 
     // vALIDATE DỮ LIỆU
     public boolean validateData(String ma) {
-            Boolean status = false;
+
         if (ma.equals("")) {
             JOptionPane.showMessageDialog(this, "Vui lòng nhâp vào mã nhân viên");
-            return false;
         }
-        return true;
+        return false;
     }
 
     private void clearForm() {
