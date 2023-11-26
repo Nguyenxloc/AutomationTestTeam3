@@ -115,9 +115,18 @@ public class UpdateAmountFrame extends javax.swing.JFrame {
         localLbl.setText(formatter.format(totalCheck) + "VNĐ");
     }
 
-    public void updateDetailBill() {
-        localHoaDonChiTietNoIMG.setSoLuong(Integer.valueOf(txtAmount.getText()));
-        hoaDonChiTietService.updateHoaDon(localHoaDonChiTietNoIMG);
+    public boolean updateDetailBill(String amount) {
+        boolean status = false;
+        try {
+            localHoaDonChiTietNoIMG.setSoLuong(Integer.valueOf(amount));
+            hoaDonChiTietService.updateHoaDon(localHoaDonChiTietNoIMG);
+            status = true;
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+            status = false;
+        }
+        return status;
     }
 
     /**
@@ -251,7 +260,8 @@ public class UpdateAmountFrame extends javax.swing.JFrame {
 
     private void btnAddDrinkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddDrinkActionPerformed
         // TODO add your handling code here:
-        updateDetailBill();
+        String amount = txtAmount.getText();
+        updateDetailBill(amount);
         reloadTbl();
         this.dispose();
     }//GEN-LAST:event_btnAddDrinkActionPerformed

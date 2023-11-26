@@ -38,10 +38,11 @@ public class Sell_02 extends TestCase {
         ChiTietDoUongNoIMG drinkDetailNoIMG2 = new ChiTietDoUongNoIMG(drinkDetail2.getId(), drinkDetail2.getTenDoUong(), drinkDetail2.getGiaNhap(),
                 drinkDetail2.getGiaBan(), drinkDetail2.getMoTa(), drinkDetail2.getLoaiDoUong(), drinkDetail2.getKhuyenMai());
         EnterAmountFrame enterAmount = new EnterAmountFrame(drinkDetailNoIMG, sellFrame.getTblDrinkDetail(), sellFrame.getLblTotalCash());
-        EnterAmountFrame enterAmount1 = new EnterAmountFrame(drinkDetailNoIMG1, sellFrame.getTblDrinkDetail(), sellFrame.getLblTotalCash());
-        EnterAmountFrame enterAmount2 = new EnterAmountFrame(drinkDetailNoIMG2, sellFrame.getTblDrinkDetail(), sellFrame.getLblTotalCash());
         assertEquals(true, enterAmount.addDrinkDetail("5"));
+        EnterAmountFrame enterAmount1 = new EnterAmountFrame(drinkDetailNoIMG1, sellFrame.getTblDrinkDetail(), sellFrame.getLblTotalCash());
         assertEquals(true, enterAmount1.addDrinkDetail("5"));
+        EnterAmountFrame enterAmount2 = new EnterAmountFrame(drinkDetailNoIMG2, sellFrame.getTblDrinkDetail(), sellFrame.getLblTotalCash());
         assertEquals(true, enterAmount2.addDrinkDetail("5"));
+
     }
 }
