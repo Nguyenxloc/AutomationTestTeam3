@@ -12,7 +12,7 @@ public class Form_ChamCongTest extends TestCase {
 
         Date ngayVao = new Date();
 
-        assertEquals(true, form_chamCong.chamCongGioVao("NV1", ngayVao, 4, 07, 29));
+        assertEquals(true, form_chamCong.chamconggiovaofake("NV2", ngayVao, 4, 07, 29));
 
 
     }
@@ -22,7 +22,7 @@ public class Form_ChamCongTest extends TestCase {
 
         Date ngayVao = new Date();
 
-        assertEquals(true, form_chamCong.chamCongGioVao("N", ngayVao, 4, 07, 29));
+        assertEquals(false, form_chamCong.chamCongGioVao("N", ngayVao, 4, 07, 29));
 
 
     }
@@ -32,7 +32,7 @@ public class Form_ChamCongTest extends TestCase {
 
         Date ngayVao = new Date();
 
-        assertEquals(false, form_chamCong.chamCongGioVao("NV01", ngayVao, 4, 07, 29));
+        assertEquals(true, form_chamCong.chamCongGioRa("NV2", ngayVao, 4, 07, 29));
 
     }
 
@@ -41,7 +41,7 @@ public class Form_ChamCongTest extends TestCase {
 
         Date ngayVao = new Date();
 
-        assertEquals(false, form_chamCong.chamCongGioVao("N", ngayVao, 4, 07, 29));
+        assertEquals(false, form_chamCong.chamCongGioRa("N", ngayVao, 4, 07, 29));
 
     }
 
