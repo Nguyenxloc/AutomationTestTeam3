@@ -83,14 +83,15 @@ public class NhapKhoRepository {
         }
     }
 
-    public boolean xoa(String id) throws Exception {
-
+    public Integer xoa(String id) throws Exception {
+        Integer ketQua = -1;
         Connection con = DBConnection.getConnection();
         String query = "DELETE FROM NhapKho WHERE Id = ? ";
         PreparedStatement st = con.prepareStatement(query);
         st.setString(1, id);
 
-        return st.execute();
+        ketQua =  st.executeUpdate();
+        return ketQua;
     }
 
     public void sua(String id, NhapKho nk) {
@@ -137,7 +138,6 @@ public class NhapKhoRepository {
             String query = "SELECT Id, IdNV,TenSP, NgayNhap, DonVi, SoLuong, DonGia "
                     + "FROM NhapKho "
                     + "WHERE  (tenSP LIKE ?) and (NgayNhap between ? and ?)  and (SoLuong between ? and ?) and (DonGia between ? and ?)";
-            System.out.println(query);
             PreparedStatement st = con.prepareStatement(query);
             st.setString(1, tenSPTimKiem);
             st.setDate(2, ngayBatDauTimKiem);
@@ -146,8 +146,6 @@ public class NhapKhoRepository {
             st.setInt(5, soLuongMax);
             st.setInt(6, giaMin);
             st.setInt(7, giaMax);
-            System.out.println(ngayBatDauTimKiem);
-            System.out.println(ngayKetThucTimKiem);
 
             ResultSet rs = st.executeQuery();
             while (rs.next()) {

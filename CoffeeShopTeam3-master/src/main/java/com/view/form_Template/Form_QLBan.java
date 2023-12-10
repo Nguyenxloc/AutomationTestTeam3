@@ -78,14 +78,35 @@ public class Form_QLBan extends javax.swing.JPanel {
 
     public boolean themBan(int idBan, String tenBan){
         boolean status = false;
+        List<QLBan> listQLBan = banService.getALl();
+        if (tenBan.trim().equals("")) {
+            JOptionPane.showMessageDialog(this, "Không được để trống!");
+            status = false;
+            return status;
+        }
+        if (idBan <= 0) {
+            JOptionPane.showMessageDialog(this, "Id bàn phải là số lớn hơn 0!");
+            status = false;
+            return status;
+        }
+
+        for (QLBan qlBan : listQLBan){
+            if(qlBan.getIdBan() == idBan){
+                JOptionPane.showMessageDialog(this, "Id bàn đã tồn tại!");
+                status = false;
+                return status;
+            }
+        }
+
         QLBan b = new QLBan(idBan, tenBan);
         if (b != null) {
             banService.them(b);
             loadTable();
             clear();
             status = true;
+            JOptionPane.showMessageDialog(this, "Thêm thành công");
         } else {
-            JOptionPane.showMessageDialog(this, "Thêm không thành công");
+            JOptionPane.showMessageDialog(this, "Thêm thất bại!");
             status = false;
         }
         return status;
@@ -93,6 +114,16 @@ public class Form_QLBan extends javax.swing.JPanel {
 
     public boolean suaBan(int idBan, String tenBan){
         boolean  status = false;
+        if (tenBan.trim().equals("")) {
+            JOptionPane.showMessageDialog(this, "Không được để trống");
+            status = false;
+            return status;
+        }
+        if (idBan <= 0) {
+            JOptionPane.showMessageDialog(this, "Id bàn phải là số lớn hơn 0!");
+            status = false;
+            return status;
+        }
         QLBan b = new QLBan(idBan, tenBan);
 //        int row = tblBan.getSelectedRow();
 //        String idd = tblBan.getValueAt(row, 0).toString();
@@ -106,25 +137,36 @@ public class Form_QLBan extends javax.swing.JPanel {
             loadTable();
             clear();
             status = true;
+            JOptionPane.showMessageDialog(this, "Sửa thành công");
         } else {
-            JOptionPane.showMessageDialog(this, " Sửa Không thành công");
+            JOptionPane.showMessageDialog(this, " Sửa thất bại");
             status = false;
         }
         return status;
     }
 
     public boolean xoaBan(int idBan){
+        List<QLBan> listQLBan = banService.getALl();
         boolean status = false;
-        int row = tblBan.getSelectedRow();
-        if (row == -1) {
-            JOptionPane.showMessageDialog(this, " Chọn 1 dòng để xóa");
-            status = false;
-        } else {
-            banService.xoa(idBan);
-            loadTable();
-            clear();
-            status = true;
+//        int row = tblBan.getSelectedRow();
+//        if (row == -1) {
+//            JOptionPane.showMessageDialog(this, " Chọn 1 dòng để xóa");
+//            status = false;
+//        }
+        for(QLBan qlBan : listQLBan){
+            if (idBan != qlBan.getIdBan()){
+                status = false;
+            }
+            if(idBan == qlBan.getIdBan()){
+                banService.xoa(idBan);
+                loadTable();
+                clear();
+                JOptionPane.showMessageDialog(this, "Xóa bàn thành công");
+                status = true;
+                break;
+            }
         }
+
         return status;
     }
 
@@ -325,8 +367,9 @@ public class Form_QLBan extends javax.swing.JPanel {
     }//GEN-LAST:event_btnSuaActionPerformed
 
     private void btnXoaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXoaActionPerformed
-        int row = tblBan.getSelectedRow();
-        xoaBan(Integer.parseInt(tblBan.getValueAt(row, 0).toString()));
+//        int row = tblBan.getSelectedRow();
+//        xoaBan(Integer.parseInt(tblBan.getValueAt(row, 0).toString()));
+        xoaBan(Integer.parseInt(txtIdBan.getText()));
     }//GEN-LAST:event_btnXoaActionPerformed
 
     private void txtIdBanKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtIdBanKeyReleased
