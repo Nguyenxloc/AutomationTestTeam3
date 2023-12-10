@@ -100,6 +100,116 @@ public class Form_LoaiDoUong extends javax.swing.JPanel {
         txtMa.setText(ld.getMa());
         txtTen.setText(ld.getTen());
     }
+
+
+    public boolean checkingThem(String ma, String ten){
+//         ma = txtMa.getText();
+//         ten = txtTen.getText();
+        boolean status = false;
+        if(ma.trim().equals("") || ten.trim().equals("")){
+            JOptionPane.showMessageDialog(this, "Không được để trống");
+            return false;
+        }
+
+        if(!ma.matches("[a-zA-Z0-9]+$")){
+            JOptionPane.showMessageDialog(this, "Mã không hợp lệ");
+            return false;
+        }
+
+        if(ten.trim().length() != ten.length()){
+            JOptionPane.showMessageDialog(this, "Tên không hợp lệ");
+            return false;
+        }
+
+        if(!ten.matches("^[\\p{L}\\p{M}0-9 ]+$")){
+            JOptionPane.showMessageDialog(this, "Tên không hợp lệ");
+            return false;
+        }
+
+        QLLoaiDoUong ql = new QLLoaiDoUong();
+        ql.setMa(ma);
+        ql.setTen(ten);
+
+        if(ql != null){
+            loaiDoUongService.them(ql);
+            loadTable();
+            clear();
+        }else{
+            JOptionPane.showMessageDialog(this, "Thêm không thành công");
+        }
+
+        return true;
+    }
+
+    public boolean checkingUpdate(Integer vitri,String tenUpdate,String maUpdate){
+//        String ma = txtMa.getText();
+//        String ten = txtTen.getText();
+        boolean status = false;
+        if( tenUpdate.trim().equals("")){
+            JOptionPane.showMessageDialog(this, "Không được để trống");
+            return false;
+        }
+
+        if(!maUpdate.matches("[a-zA-Z0-9]+$")){
+            JOptionPane.showMessageDialog(this, "Mã không hợp lệ");
+            return false;
+        }
+
+        if(tenUpdate.trim().length() != tenUpdate.length()){
+            JOptionPane.showMessageDialog(this, "Tên không hợp lệ");
+            return false;
+        }
+
+        if(!tenUpdate.matches("^[\\p{L}\\p{M}0-9 ]+$")){
+            JOptionPane.showMessageDialog(this, "Tên không hợp lệ");
+            return false;
+        }
+
+        QLLoaiDoUong ld = new QLLoaiDoUong();
+
+        ld.setTen(tenUpdate);
+        ld.setMa(maUpdate);
+
+        int row = tblTable.getSelectedRow();
+        if(vitri == -1){
+            JOptionPane.showMessageDialog(this, "Chọn 1 dòng để sửa");
+            return false;
+        }
+        if(ld != null){
+            loaiDoUongService.sua(ld);
+            loadTable();
+            clear();
+            return true;
+        }else{
+            JOptionPane.showMessageDialog(this, "Sửa không thành công");
+            return false;
+        }
+
+
+    }
+
+    public boolean checkingDelete(String id){
+        boolean status = false;
+        if(id.equals("")){
+            JOptionPane.showMessageDialog(this, "Bạn chưa chọn id");
+            return false;
+        }else{
+            JOptionPane.showMessageDialog(this, "Xóa thành công");
+            loaiDoUongService.xoa(id);
+            loadTable();
+            clear();
+            return true;
+        }
+//        return true;
+    }
+
+    public boolean checkingTimKiem(String timkiem){
+        String timKiem = timkiem.trim().equals("")? "%" : timkiem;
+        upDateTimKiem(loaiDoUongService.timKiem(timKiem, timKiem));
+        return true;
+    }
+
+
     
 //    private void updatePreNext() {
 //        // Xóa tất cả các dòng trong dtm
@@ -340,18 +450,19 @@ public class Form_LoaiDoUong extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnXoaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXoaActionPerformed
-        int row = tblTable.getSelectedRow();
-        String id = tblTable.getValueAt(row, 0).toString();
-        if(row == -1){
-            JOptionPane.showMessageDialog(this, "Chọn 1 dòng để xóa");
-            return ;
-        }else{
-            JOptionPane.showMessageDialog(this, "Xóa thành công");
-            loaiDoUongService.xoa(id);
-            loadTable();
-            clear();
-        }
-        
+//        int row = tblTable.getSelectedRow();
+//        String id = tblTable.getValueAt(row, 0).toString();
+//        if(row == -1){
+//            JOptionPane.showMessageDialog(this, "Chọn 1 dòng để xóa");
+//            return ;
+//        }else{
+//            JOptionPane.showMessageDialog(this, "Xóa thành công");
+//            loaiDoUongService.xoa(id);
+//            loadTable();
+//            clear();
+//        }
+        String id = txtID.getText();
+        checkingDelete(id);
         
     }//GEN-LAST:event_btnXoaActionPerformed
 
@@ -360,40 +471,52 @@ public class Form_LoaiDoUong extends javax.swing.JPanel {
     }//GEN-LAST:event_tblTableMouseClicked
 
     private void btnThemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThemActionPerformed
-        QLLoaiDoUong ql = getForm();
-        
-        if(ql != null){
-            loaiDoUongService.them(ql);
-            loadTable();
-            clear();
-        }else{
-            JOptionPane.showMessageDialog(this, "Thêm không thành công");
-        }
-        
+//        QLLoaiDoUong ql = getForm();
+//
+//        if(ql != null){
+//            loaiDoUongService.them(ql);
+//            loadTable();
+//            clear();
+//        }else{
+//            JOptionPane.showMessageDialog(this, "Thêm không thành công");
+//        }
+
+        String ma = txtMa.getText();
+        String ten = txtTen.getText();
+        checkingThem(ma,ten);
+
     }//GEN-LAST:event_btnThemActionPerformed
 
     private void btnSuaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSuaActionPerformed
-        QLLoaiDoUong ld = getForm();
+//        QLLoaiDoUong ld = getForm();
+//        int row = tblTable.getSelectedRow();
+//
+//        if(row == -1){
+//            JOptionPane.showMessageDialog(this, "Chọn 1 dòng để sửa");
+//            return;
+//        }
+//        if(ld != null){
+//            loaiDoUongService.sua(ld);
+//            loadTable();
+//            clear();
+//        }else{
+//            JOptionPane.showMessageDialog(this, "Sửa không thành công");
+//        }
+
         int row = tblTable.getSelectedRow();
-        
-        if(row == -1){
-            JOptionPane.showMessageDialog(this, "Chọn 1 dòng để sửa");
-            return;
-        }
-        if(ld != null){
-            loaiDoUongService.sua(ld);
-            loadTable();
-            clear();
-        }else{
-            JOptionPane.showMessageDialog(this, "Sửa không thành công");
-        }
+        String ma = txtMa.getText();
+        String ten = txtTen.getText();
+        checkingUpdate(row,ten,ma);
         
         
     }//GEN-LAST:event_btnSuaActionPerformed
 
     private void btnTKiemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTKiemActionPerformed
-        String timKiem = txtTimKiem.getText().trim().equals("")? "%" : txtTimKiem.getText();
-        upDateTimKiem(loaiDoUongService.timKiem(timKiem, timKiem));
+//        String timKiem = txtTimKiem.getText().trim().equals("")? "%" : txtTimKiem.getText();
+//        upDateTimKiem(loaiDoUongService.timKiem(timKiem, timKiem));
+
+        String tt = txtTimKiem.getText();
+        checkingTimKiem(tt);
         
     }//GEN-LAST:event_btnTKiemActionPerformed
 
