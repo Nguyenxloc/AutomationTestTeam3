@@ -7,8 +7,9 @@ package com.view.form;
 import com.view.DAO1.DanhSachChamCongDAO;
 import com.view.model.ChamCongK;
 import com.view.model.LuongK;
+
+import java.sql.Date;
 import java.util.ArrayList;
-import java.util.Date;
 import javax.swing.RowFilter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
@@ -28,7 +29,7 @@ public class TinhLuongNhanVien extends javax.swing.JPanel {
 
     }
 
-    private void loadData() {
+    public void loadData() {
         ArrayList<ChamCongK> list = congDAO.getDanhSachChamCOng();
         defaultTableModel = (DefaultTableModel) tblFormDanhSach.getModel();
         defaultTableModel.setRowCount(0);
@@ -248,7 +249,7 @@ public class TinhLuongNhanVien extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void txtSearchKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSearchKeyReleased
+    public void txtSearchKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSearchKeyReleased
         DefaultTableModel ob = (DefaultTableModel) tblFormDanhSach.getModel();
         TableRowSorter<DefaultTableModel> obj = new TableRowSorter<>(ob);
         tblFormDanhSach.setRowSorter(obj);
@@ -257,7 +258,9 @@ public class TinhLuongNhanVien extends javax.swing.JPanel {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        loadLuong();
+        Date tuNgay = new Date(txtNgayA.getDate().getTime());
+        Date denNgay = new Date(txtNgayB.getDate().getTime());
+        loadLuong(tuNgay, denNgay);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void btnLoadDataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoadDataActionPerformed
@@ -265,18 +268,26 @@ public class TinhLuongNhanVien extends javax.swing.JPanel {
         loadData();
     }//GEN-LAST:event_btnLoadDataActionPerformed
 
-    private void loadLuong() {
-        java.sql.Date nA = new java.sql.Date(txtNgayA.getDate().getTime()) ;
-        java.sql.Date nB = new java.sql.Date(txtNgayB.getDate().getTime()) ;
-        ArrayList<LuongK> list = congDAO.getLuong(nA, nB);
-        defaultTableModel = (DefaultTableModel) tblLuong.getModel();
-        defaultTableModel.setRowCount(0);
-        for (LuongK c : list) {
-            defaultTableModel.addRow(new Object[]{
-                c.getId(), c.getTen(), c.getTongGio(), c.getLuongPartime(), c.getLuong()
-            });
+    public boolean loadLuong(Date tuNgay, Date denNgay) {
+        boolean stt = false;
+        try {
+            java.sql.Date nA = new java.sql.Date(tuNgay.getTime()) ;
+            java.sql.Date nB = new java.sql.Date(denNgay.getTime()) ;
+            ArrayList<LuongK> list = congDAO.getLuong(nA, nB);
+            defaultTableModel = (DefaultTableModel) tblLuong.getModel();
+            stt = true;
+            defaultTableModel.setRowCount(0);
+            for (LuongK c : list) {
+                defaultTableModel.addRow(new Object[]{
+                        c.getId(), c.getTen(), c.getTongGio(), c.getLuongPartime(), c.getLuong()
+                });
+            }
         }
-
+        catch (Exception e){
+            e.printStackTrace();
+            stt = false;
+        }
+        return stt;
     }
 
 

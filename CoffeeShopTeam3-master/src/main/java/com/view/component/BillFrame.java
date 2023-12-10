@@ -122,78 +122,127 @@ public class BillFrame extends javax.swing.JFrame {
 
     }
 
-    public void updateMoneyTake() {
+    public boolean updateMoneyTake(String inerID,String inermoneyTake) {
         int checkStage = 0;
-        hoaDonService.updateMoneyTake(LocalId, localMoneyTake);
-        for (HoaDon hd : LstHoaDon_singleton.getInstance().lstHoaDon) {
-            if (hd.getId().equalsIgnoreCase(LocalId)) {
-                hd.setMoneyTake(BigDecimal.valueOf(localMoneyTake));
-                checkStage = 1;
-                break;
-            }
-        }
-
-        if (checkStage == 0) {
-            for (HoaDon hdCho : LstHoaDonCho_SingLeTon.getInstance().lstHoaDonCho) {
-                if (hdCho.getId().equalsIgnoreCase(LocalId)) {
-                    hdCho.setMoneyTake(BigDecimal.valueOf(localMoneyTake));
-                    break;
-                }
-            }
-        }
-    }
-
-    public void updateSttCheckBill() {
-        hoaDonService.updateSttCheckBill(1, LocalId);
-        int checkStage = 0;
-        for (HoaDon hd : LstHoaDon_singleton.getInstance().lstHoaDon) {
-            if (hd.getId().equalsIgnoreCase(LocalId)) {
-                hd.setTinhTrangThanhToan(1);
-                checkStage = 1;
-                break;
-            }
-        }
-        if (checkStage == 0) {
-            for (HoaDon hdCho : LstHoaDonCho_SingLeTon.getInstance().lstHoaDonCho) {
-                if (hdCho.getId().equalsIgnoreCase(LocalId)) {
-                    hdCho.setTinhTrangThanhToan(1);
-                    break;
-                }
-            }
-        }
-    }
-
-    public void updateDiscount() {
+        boolean stt = false;
         try {
-            if (!txtDiscount.getText().strip().equals("")) {
-                hoaDonService.updateDiscount(txtDiscount.getText().strip(), LocalId);
-                int checkStage = 0;
+            Double moneyTake = Double.parseDouble(inermoneyTake);
+            hoaDonService.updateMoneyTake(inerID, moneyTake);
+            for (HoaDon hd : LstHoaDon_singleton.getInstance().lstHoaDon) {
+                if (hd.getId().equalsIgnoreCase(inerID)) {
+                    hd.setMoneyTake(BigDecimal.valueOf(moneyTake));
+                    checkStage = 1;
+                    break;
+                }
+            }
+
+            if (checkStage == 0) {
+                for (HoaDon hdCho : LstHoaDonCho_SingLeTon.getInstance().lstHoaDonCho) {
+                    if (hdCho.getId().equalsIgnoreCase(LocalId)) {
+                        hdCho.setMoneyTake(BigDecimal.valueOf(localMoneyTake));
+                        break;
+                    }
+                }
+            }
+            stt = true;
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+            stt = false;
+        }
+      return stt;
+    }
+
+    public boolean updateSttCheckBill(String inerID) {
+        boolean stt = false;
+        try {
+            hoaDonService.updateSttCheckBill(1, inerID);
+            int checkStage = 0;
+            for (HoaDon hd : LstHoaDon_singleton.getInstance().lstHoaDon) {
+                if (hd.getId().equalsIgnoreCase(inerID)) {
+                    hd.setTinhTrangThanhToan(1);
+                    checkStage = 1;
+                    break;
+                }
+            }
+            if (checkStage == 0) {
+                for (HoaDon hdCho : LstHoaDonCho_SingLeTon.getInstance().lstHoaDonCho) {
+                    if (hdCho.getId().equalsIgnoreCase(inerID)) {
+                        hdCho.setTinhTrangThanhToan(1);
+                        break;
+                    }
+                }
+            }
+            stt = true;
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+            stt = false;
+        }
+        return  stt ;
+    }
+
+    public boolean updateDiscount(String code) {
+        boolean stt  = false;
+        int checkStage = 0;
+        try {
+            if (!code.strip().equals("")) {
+                    if(hoaDonService.updateDiscount(code.strip(), LocalId)==true){
+                        stt = true;
+                    }
+                    else{
+                        stt = false;
+                        JOptionPane.showMessageDialog(this, "Mã giảm giá không đúng !");
+                    }
+
                 for (HoaDon hd : LstHoaDon_singleton.getInstance().lstHoaDon) {
                     if (hd.getId().equalsIgnoreCase(LocalId)) {
-                        GiamGia giamGia = giamGiaService.selectByID(txtDiscount.getText().strip());
-                        hd.setMaGiamGia(giamGia);
-                        checkStage = 1;
-                        break;
+                        try {
+                            GiamGia giamGia = giamGiaService.selectByID(code.strip());
+                            hd.setMaGiamGia(giamGia);
+                            checkStage = 1;
+                            stt = true;
+                            break;
+                        }
+                        catch(Exception e) {
+                            e.printStackTrace();
+                            JOptionPane.showMessageDialog(this, "Mã giảm giá không đúng !");
+                            stt = false;
+                        }
+
                     }
                 }
 
                 if (checkStage == 0) {
                     for (HoaDon hdCho : LstHoaDonCho_SingLeTon.getInstance().lstHoaDonCho) {
                         if (hdCho.getId().equalsIgnoreCase(LocalId)) {
-                            GiamGia giamGia = giamGiaService.selectByID(txtDiscount.getText().strip());
-                            hdCho.setMaGiamGia(giamGia);
-                            break;
+                            try {
+                                GiamGia giamGia = giamGiaService.selectByID(code.strip());
+                                hdCho.setMaGiamGia(giamGia);
+                                stt=true;
+                                break;
+                            }
+                            catch(Exception e) {
+                                e.printStackTrace();
+                                JOptionPane.showMessageDialog(this, "Mã giảm giá không đúng !");
+                                stt = false;
+                            }
+
                         }
                     }
                 }
             } else {
                 hoaDonService.updateDiscount(null, LocalId);
+                JOptionPane.showMessageDialog(this, "Mã giảm giá không đúng !");
+                stt = false;
             }
         } catch (Exception e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(this, "Mã giảm giá không đúng !");
+            stt = false;
+            System.out.println("test false");
         }
-
+        return stt;
     }
 
     public void loadHoaDonTbl() {
@@ -311,9 +360,6 @@ public class BillFrame extends javax.swing.JFrame {
                     break;
                 }
             }
-
-            
-
             if (checkHoaDon == 1 && checkHoaDonCho == 1) {
                 break;
             }
@@ -625,9 +671,11 @@ public class BillFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
         try {
             localMoneyTake = Double.valueOf(txtEnterMoney.getText());
-            updateMoneyTake();
-            updateSttCheckBill();
-            updateDiscount();
+            String discountCode = txtDiscount.getText();
+            String moneyTakeTXT = String.valueOf(localMoneyTake);
+            updateMoneyTake(LocalId,moneyTakeTXT);
+            updateSttCheckBill(LocalId);
+            updateDiscount(discountCode);
             java.awt.EventQueue.invokeLater(new Runnable() {
                 public void run() {
                     new BillFinishFrame(LocalId).setVisible(true);

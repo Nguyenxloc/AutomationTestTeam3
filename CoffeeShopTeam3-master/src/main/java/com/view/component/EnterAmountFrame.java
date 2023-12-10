@@ -48,7 +48,8 @@ public class EnterAmountFrame extends javax.swing.JFrame {
         System.out.println(localDrinkDetailNoIMG);
     }
 
-    public void addDrinkDetail() {
+    public boolean addDrinkDetail(String amountInput) {
+        boolean flag = false;
         int stt = 0;
         double cellCheck = 0;
         double totalCheck = 0;
@@ -61,7 +62,7 @@ public class EnterAmountFrame extends javax.swing.JFrame {
         HoaDonChiTietNoIMG hoaDonChiTietNoIMG = new HoaDonChiTietNoIMG();
         hoaDonChiTietNoIMG.setHoaDon(hoaDon);
         hoaDonChiTietNoIMG.setChiTietDoUongNoIMG(localDrinkDetailNoIMG);
-        hoaDonChiTietNoIMG.setSoLuong(Integer.valueOf(txtAmount.getText()));
+        hoaDonChiTietNoIMG.setSoLuong(Integer.valueOf(amountInput));
         hoaDonChiTietNoIMGAdded = hoaDonChiTietService.saveHoaDon(hoaDonChiTietNoIMG);
         if (hoaDonChiTietNoIMGAdded != null) {
             LstHoaDonChiTiet_singleton.getInstance().lstHoaDonChiTietNoIMG.add(hoaDonChiTietNoIMGAdded);
@@ -72,6 +73,7 @@ public class EnterAmountFrame extends javax.swing.JFrame {
                     totalCheck += cellCheck;
                     model.addRow(new Object[]{stt, hdChiTiet.getChiTietDoUongNoIMG().getTenDoUong(), hdChiTiet.getSoLuong(),
                         hdChiTiet.getChiTietDoUongNoIMG().getGiaBan(), cellCheck});
+                    flag=true;
                 }
             }
         } else {
@@ -84,10 +86,11 @@ public class EnterAmountFrame extends javax.swing.JFrame {
                         hdChiTiet.getChiTietDoUongNoIMG().getGiaBan(), cellCheck});
                 }
             }
+            flag = false;
             JOptionPane.showMessageDialog(null, "Sản phẩm thêm vào không được trùng lặp");
         }
-
         localLbl.setText(String.valueOf(totalCheck));
+        return flag;
     }
 
     /**
@@ -221,7 +224,8 @@ public class EnterAmountFrame extends javax.swing.JFrame {
 
     private void btnAddDrinkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddDrinkActionPerformed
         // TODO add your handling code here:
-        addDrinkDetail();
+        String amountInp = txtAmount.getText();
+        addDrinkDetail(amountInp);
         this.dispose();
     }//GEN-LAST:event_btnAddDrinkActionPerformed
 

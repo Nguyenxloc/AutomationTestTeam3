@@ -17,7 +17,7 @@ public interface INhapKhoService {
     public List<NhanVien> getCBBNV();
     public NhanVien timTheoID(String id);
     public void them(QLNhapKho nk);
-    public boolean xoa(String id);
+    public Integer xoa(String id);
     public void sua(String id,QLNhapKho nk);
     public List<QLNhapKho> timTheoTungTruong(String tenSP, Date ngayBatDau,Date ngayKetThuc, int soLuongMin,int soLuongMax, int giaMin,int giaMax);
 }

@@ -5,8 +5,10 @@
 package com.view.form_Template;
 import java.math.BigDecimal;
 import model.NhanVien;
+import org.apache.poi.hpsf.Decimal;
 import service.INhapKhoService;
 import service.NhapKhoService;
+import viewModel.QLBan;
 import viewModel.QLNhapKho;
 import java.sql.Date;
 import java.text.DecimalFormat;
@@ -14,6 +16,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import javax.imageio.spi.ServiceRegistry;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -25,6 +28,7 @@ public class Form_QuanLyKho extends javax.swing.JPanel {
 
     private INhapKhoService nhapkhoService = new NhapKhoService();
     List<QLNhapKho> ds = new ArrayList<>();
+    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
     
     /**
      * Creates new form Form_QuanLyKho
@@ -152,6 +156,150 @@ public class Form_QuanLyKho extends javax.swing.JPanel {
             };
             dtm.addRow(row);
         }
+    }
+
+    public boolean nhapKho(NhanVien nv, String tenSP, Date ngayNhap, String donVi, int soLuong, BigDecimal donGia){
+        boolean status = false;
+        try {
+            if (tenSP.trim().equals("") || ngayNhap.equals("") || donVi.trim().equals("")){
+                JOptionPane.showMessageDialog(this, "Không được để trống");
+                status = false;
+                return status;
+            }
+            if(soLuong <= 0){
+                JOptionPane.showMessageDialog(this, "Số lượng nhập vào phải lớn hơn 0!");
+                status = false;
+                return status;
+            }
+            QLNhapKho nk = new QLNhapKho();nk.setNhanVien(nv);nk.setTenSP(tenSP);nk.setNgayNhap(ngayNhap);
+            nk.setDonVi(donVi);nk.setSoLuong(soLuong);nk.setDonGia(donGia);
+            if (nk != null) {
+                JOptionPane.showMessageDialog(this, "Nhập thành công");
+                nhapkhoService.them(nk);
+                loadTable();
+                clear();
+                status = true;
+            } else {
+                JOptionPane.showMessageDialog(this, "Nhập không thành công");
+                status = false;
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return status;
+    }
+
+    public boolean sua(String id, NhanVien nv, String tenSP, Date ngayNhap, String donVi, int soLuong, BigDecimal donGia){
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        boolean status = false;
+        try {
+            if (tenSP.trim().equals("") || ngayNhap.equals("") || donVi.trim().equals("")){
+                JOptionPane.showMessageDialog(this, "Không được để trống");
+                status = false;
+                return status;
+            }
+            if(soLuong <= 0){
+                JOptionPane.showMessageDialog(this, "Số lượng nhập vào phải lớn hơn 0!");
+                status = false;
+                return status;
+            }
+
+            QLNhapKho nk = new QLNhapKho();
+            nk.setNhanVien(nv);
+            nk.setTenSP(tenSP);
+            nk.setNgayNhap(ngayNhap);
+            nk.setDonVi(donVi);
+            nk.setSoLuong(soLuong);
+            nk.setDonGia(donGia);
+//            int row = tblTable.getSelectedRow();
+//            id = tblTable.getValueAt(row, 0).toString();
+//            if (row == -1) {
+//                JOptionPane.showMessageDialog(this, "Chọn 1 dòng để xóa");
+//                status = false;
+//            }
+            if (nk != null) {
+                JOptionPane.showMessageDialog(this, "Sửa thành công");
+                nhapkhoService.sua(id, nk);
+                loadTable();
+                clear();
+                status = true;
+            } else {
+                JOptionPane.showMessageDialog(this, "Sửa không thành công");
+                status = false;
+            }
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return status;
+    }
+
+    public boolean xoa(String id){
+        List<QLNhapKho> listQLNhapKho = nhapkhoService.getALL();
+        boolean status = false;
+//        int row = tblTable.getSelectedRow();
+//        if (row == -1) {
+//            JOptionPane.showMessageDialog(this, "Chọn 1 dòng để xóa");
+//            status = false;
+//        }
+//        id = tblTable.getValueAt(row, 0).toString();
+
+        int ketQua = nhapkhoService.xoa(id);
+        if (ketQua > -1) {
+            JOptionPane.showMessageDialog(this, "Xóa thành công");
+            loadTable();
+            clear();
+            status = true;
+        } else {
+            JOptionPane.showMessageDialog(this, "Xóa thất bại");
+            status = false;
+        }
+        return status;
+    }
+
+    public boolean timKiem(String tenSp, Date ngayBatDau, Date ngayKetThuc, int soLuongMin, int soLuongMax){
+        boolean status = false;
+        tenSp = txtSsearchKey.getText().trim().equals("") ? "%" : txtSsearchKey.getText();
+        SimpleDateFormat spd = new SimpleDateFormat("dd/MM/yyyy");
+         ngayBatDau = null;
+         ngayKetThuc = null;
+        try {
+            ngayBatDau = new Date(spd.parse(txtNgayBatDau.getText()).getTime());
+        } catch (Exception e) {
+        }
+        try {
+            ngayKetThuc = new Date(spd.parse(txtNgayKetThuc.getText()).getTime());
+        } catch (Exception e) {
+        }
+         soLuongMin = 0;
+        try {
+            soLuongMin = Integer.parseInt(txtSoLuongMin.getText());
+        } catch (Exception e) {
+        }
+         soLuongMax = 99999999;
+        try {
+            soLuongMax = Integer.parseInt(txtSoLuongMax.getText());
+        } catch (Exception e) {
+        }
+        int giaMax = 99999999;
+        try {
+            giaMax = Integer.parseInt(txtGiaMax.getText());
+        } catch (Exception e) {
+        }
+        int giaMin = 0;
+        try {
+            giaMin = Integer.parseInt(txtGiaMin.getText());
+        } catch (Exception e) {
+        }
+        try {
+            updateTimKiem(nhapkhoService.timTheoTungTruong(tenSp, ngayBatDau, ngayKetThuc, soLuongMin, soLuongMax, giaMin, giaMax));
+            status = true;
+        }catch (Exception e){
+            e.printStackTrace();
+            status =false;
+        }
+
+        return status;
     }
     
     /**
@@ -574,39 +722,13 @@ public class Form_QuanLyKho extends javax.swing.JPanel {
     }//GEN-LAST:event_tblTableMouseClicked
 
     private void btnTKiemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTKiemActionPerformed
-        String tenSp = txtSsearchKey.getText().trim().equals("") ? "%" : txtSsearchKey.getText();
-        SimpleDateFormat spd = new SimpleDateFormat("dd/MM/yyyy");
-        Date ngayBatDau = null;
-        Date ngayKetThuc = null;
         try {
-            ngayBatDau = new Date(spd.parse(txtNgayBatDau.getText()).getTime());
-        } catch (Exception e) {
+            Date ngayBD = new Date(sdf.parse(txtNgayBatDau.getText()).getTime());
+            Date ngayKT = new Date(sdf.parse(txtNgayKetThuc.getText()).getTime());
+            timKiem(txtTenSP.getText(), ngayBD, ngayKT, Integer.parseInt(txtSoLuongMin.getText()), Integer.parseInt(txtSoLuongMax.getText()));
+        }catch (Exception e){
+            e.printStackTrace();
         }
-        try {
-            ngayKetThuc = new Date(spd.parse(txtNgayKetThuc.getText()).getTime());
-        } catch (Exception e) {
-        }
-        int soLuongMin = 0;
-        try {
-            soLuongMin = Integer.parseInt(txtSoLuongMin.getText());
-        } catch (Exception e) {
-        }
-        int soLuongMax = 99999999;
-        try {
-            soLuongMax = Integer.parseInt(txtSoLuongMax.getText());
-        } catch (Exception e) {
-        }
-        int giaMax = 99999999;
-        try {
-            giaMax = Integer.parseInt(txtGiaMax.getText());
-        } catch (Exception e) {
-        }
-        int giaMin = 0;
-        try {
-            giaMin = Integer.parseInt(txtGiaMin.getText());
-        } catch (Exception e) {
-        }
-        updateTimKiem(nhapkhoService.timTheoTungTruong(tenSp, ngayBatDau, ngayKetThuc, soLuongMin, soLuongMax, giaMin, giaMax));
     }//GEN-LAST:event_btnTKiemActionPerformed
 
     private void txtSsearchKeyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtSsearchKeyActionPerformed
@@ -635,60 +757,30 @@ public class Form_QuanLyKho extends javax.swing.JPanel {
 
     private void btnNhapKhoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNhapKhoActionPerformed
         try {
-            QLNhapKho nk = getFrom();
-            if (nk != null) {
-                JOptionPane.showMessageDialog(this, "Nhập thành công");
-                nhapkhoService.them(nk);
-                loadTable();
-                clear();
-            } else {
-                JOptionPane.showMessageDialog(this, "Nhập không thành công");
-            }
-
-        } catch (ParseException ex) {
-            ex.printStackTrace();
+            int cout = cbbtenNV.getSelectedIndex();
+            NhanVien nv = nhapkhoService.getCBBNV().get(cout);
+            Date nn = new Date(sdf.parse(txtnNhap.getText()).getTime());
+            nhapKho(nv, txtTenSP.getText(), nn, txtdVi.getText(), Integer.parseInt(txtsoLuong.getText()), new BigDecimal(txtdGia.getText()));
+        }catch (Exception e){
+            e.printStackTrace();
         }
+
     }//GEN-LAST:event_btnNhapKhoActionPerformed
 
     private void btnSuaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSuaActionPerformed
         try {
-            QLNhapKho nv = getFrom();
-            int row = tblTable.getSelectedRow();
-            String id = tblTable.getValueAt(row, 0).toString();
-            if (row == -1) {
-                JOptionPane.showMessageDialog(this, "Chọn 1 dòng để xóa");
-                return;
-            }
-            if (nv != null) {
-                JOptionPane.showMessageDialog(this, "Sửa thành công");
-                nhapkhoService.sua(id, nv);
-                loadTable();
-                clear();
-            } else {
-                JOptionPane.showMessageDialog(this, "Sửa không thành công");
-            }
-
-        } catch (ParseException ex) {
-            ex.printStackTrace();
+            int cout = cbbtenNV.getSelectedIndex();
+            NhanVien nv = nhapkhoService.getCBBNV().get(cout);
+            Date nn = new Date(sdf.parse(txtnNhap.getText()).getTime());
+            sua(txtID.getText(),nv, txtTenSP.getText(), nn, txtdVi.getText(), Integer.parseInt(txtsoLuong.getText()), new BigDecimal(txtdGia.getText()));
+        }catch (Exception e){
+            e.printStackTrace();
         }
     }//GEN-LAST:event_btnSuaActionPerformed
 
     private void btnXoaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXoaActionPerformed
-        int row = tblTable.getSelectedRow();
-        if (row == -1) {
-            JOptionPane.showMessageDialog(this, "Chọn 1 dòng để xóa");
-            return;
-        }
-        String id = tblTable.getValueAt(row, 0).toString();
-        System.out.println(id);
-        boolean ketQua = nhapkhoService.xoa(id);
-        if (ketQua == true) {
-            JOptionPane.showMessageDialog(this, "Xóa ko thành công");
-        } else {
-            JOptionPane.showMessageDialog(this, "Xóa thành công");
-            loadTable();
-            clear();
-        }
+//        int row = tblTable.getSelectedRow();
+        xoa(txtID.getText());
     }//GEN-LAST:event_btnXoaActionPerformed
 
     private void btnClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearActionPerformed

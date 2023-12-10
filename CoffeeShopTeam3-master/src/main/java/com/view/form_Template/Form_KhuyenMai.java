@@ -4,36 +4,20 @@
  */
 package com.view.form_Template;
 
-import DoUong_HoaDon_ThongKe_Model.LichSuHoaDon;
-import DoUong_HoaDon_ThongKe_Model.LoaiDoUong;
-import DoUong_HoaDon_ThongKe_Service.LoaiDoUongService;
-
-import com.view.form_Template.*;
-import DoUong_HoaDon_ThongKe_Model.LoaiDoUong;
-import DoUong_HoaDon_ThongKe_Service.LichSuHoaDonService;
-import com.view.form.ThemSanPhamGiamGiaJDialog;
-import model.ChiTietDoUong;
-
-import com.view.model.QuanLyTaiKhoan;
-import java.awt.Checkbox;
-import java.text.DecimalFormat;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
-import model.CapBac;
+
 import model.HoaDon;
 import model.KhuyenMai;
-import model.TaiKhoan;
-import service.ChiTietDoUongService_Master;
 import service.HoaDonService;
 import service.SaleService;
-import service.TaoTaiKhoanService;
 
 /**
  *
@@ -66,7 +50,7 @@ public class Form_KhuyenMai extends javax.swing.JPanel {
         }
     }
 
-    private void fillToTableKhuyenMaiByTrangThai(String trangThai, ArrayList<KhuyenMai> listKM) {
+    public void fillToTableKhuyenMaiByTrangThai(String trangThai, ArrayList<KhuyenMai> listKM) {
         DefaultTableModel model = (DefaultTableModel) tblKhuyenMai.getModel();
         model.setRowCount(0);
         listKM = service.selectALLByTrangThai(trangThai);
@@ -155,7 +139,7 @@ public class Form_KhuyenMai extends javax.swing.JPanel {
     }
 
     // Chức năng set các giá trị trong bảng khuyến mãi lên form
-    private void setForm() {
+    public void setForm() {
         int row = tblKhuyenMai.getSelectedRow();
         if (row == -1) {
             JOptionPane.showMessageDialog(this, "Vui lòng chọn vào 1 mã khuyến mãi trên table");
@@ -208,13 +192,22 @@ public class Form_KhuyenMai extends javax.swing.JPanel {
 //
     // Chức năng đăng ký form
 
-    private void addKhuyenMai() {
-        if (validateForm()) {
-            KhuyenMai km = getFomr();
+    public boolean addKhuyenMai(String maKM, String tenKM, String loaiKM, String giaTri, Date ngayBatDau, Date ngayKetThuc, String trangThai) {
+
+        if (validateForm(maKM,tenKM,loaiKM,giaTri,ngayBatDau,ngayKetThuc,trangThai)) {
+            KhuyenMai km = new KhuyenMai();
+            km.setMaKM(maKM);
+            km.setTenKM(tenKM);
+            km.setLoaiKM(loaiKM);
+            km.setGiaTri(Integer.parseInt(giaTri));
+            km.setNgayBatDau(ngayBatDau);
+            km.setNgayKetThuc(ngayKetThuc);
+            km.setTrangThai(trangThai);
+
 
             if (km == null) {
                 JOptionPane.showMessageDialog(this, "Lỗi trống dữ liệu");
-                return;
+                return false;
             }
 
             int choice = JOptionPane.showConfirmDialog(this, "Bạn có chắc chắn muốn thêm?", "Add", JOptionPane.YES_NO_OPTION);
@@ -224,27 +217,38 @@ public class Form_KhuyenMai extends javax.swing.JPanel {
                     JOptionPane.showMessageDialog(this, "Thêm khuyến mãi thành công");
                     fillToTableKhuyenMai();
                     clearForm();
+                    return true;
                 }
             }
 
         }
+
+        return false;
     }
 
     // Chức năng update Khuyen Mai
-    private void updateKhuyenMai() {
+    public boolean updateKhuyenMai(  String maKM, String tenKM, String loaiKM, String giaTri, Date ngayBatDau, Date ngayKetThuc, String trangThai) {
 
-        int row = tblKhuyenMai.getSelectedRow();
-        if (row == -1) {
-            JOptionPane.showMessageDialog(this, "Vui lòng chọn 1 khuyến mãi trên table");
-            return;
-        }
+//        int row = tblKhuyenMai.getSelectedRow();
+//        if (row == -1) {
+//            JOptionPane.showMessageDialog(this, "Vui lòng chọn 1 khuyến mãi trên table");
+//            return false;
+//        }
 
-        if (validateFormUpdate()) {
-            String maKM = tblKhuyenMai.getValueAt(row, 0).toString();
-            KhuyenMai km = getFomr();
+        if (validateFormUpdate(maKM,tenKM,loaiKM,giaTri,ngayBatDau,ngayKetThuc,trangThai)) {
+//            String maKM = tblKhuyenMai.getValueAt(row, 0).toString();
+            KhuyenMai km = new KhuyenMai();
+            km.setMaKM(maKM);
+            km.setTenKM(tenKM);
+            km.setLoaiKM(loaiKM);
+            km.setGiaTri(Integer.parseInt(giaTri));
+            km.setNgayBatDau(ngayBatDau);
+            km.setNgayKetThuc(ngayKetThuc);
+            km.setTrangThai(trangThai);
+//            KhuyenMai km = getFomr();
             if (km == null) {
                 JOptionPane.showMessageDialog(this, "Lỗi trống dữ liệu");
-                return;
+                return false;
             }
             int choice = JOptionPane.showConfirmDialog(this, "Bạn có chắc chắn muốn sửa?", "Update", JOptionPane.YES_NO_OPTION);
             if (choice == JOptionPane.YES_OPTION) {
@@ -252,106 +256,135 @@ public class Form_KhuyenMai extends javax.swing.JPanel {
                 JOptionPane.showMessageDialog(this, "Sửa khuyến mãi thành công");
                 fillToTableKhuyenMai();
                 clearForm();
+                return true;
             }
 
         }
 
+        return false;
+
     }
 
     // Chức năng delete KHuyến mại
-    private void deleteKhuyeMai() {
+    public boolean deleteKhuyeMai( int row, String maKhuyenMai) {
 
-        int row = tblKhuyenMai.getSelectedRow();
+//         row = tblKhuyenMai.getSelectedRow();
         if (row == -1) {
             JOptionPane.showMessageDialog(this, "Vui lòng chọn 1 khuyến mãi trên table");
-            return;
+            return false;
         }
 
         int choice = JOptionPane.showConfirmDialog(this, "Bạn có chắc chắn muốn xóa?", "Delete", JOptionPane.YES_NO_OPTION);
         if (choice == JOptionPane.YES_OPTION) {
-            String maKhuyenMai = tblKhuyenMai.getValueAt(row, 0).toString();
+//            maKhuyenMai = tblKhuyenMai.getValueAt(row, 0).toString();
             service.delete(maKhuyenMai);
             JOptionPane.showMessageDialog(this, "Xóa khuyến mãi thành công");
             fillToTableKhuyenMai();
             clearForm();
         }
+        return true;
     }
 
     // Chức năng tìm kiếm trong bảng khuyến mại
-    private void searchKhuyenMai() {
-        DefaultTableModel model = (DefaultTableModel) tblKhuyenMai.getModel();
-        TableRowSorter<DefaultTableModel> search = new TableRowSorter<>(model);
-        tblKhuyenMai.setRowSorter(search);
-        search.setRowFilter(javax.swing.RowFilter.regexFilter(txtTimKM.getText()));
+    public boolean searchKhuyenMai(String timKiem) {
+        if(timKiem != null){
+            DefaultTableModel model = (DefaultTableModel) tblHoaDon.getModel();
+            TableRowSorter<DefaultTableModel> search = new TableRowSorter<>(model);
+            tblHoaDon.setRowSorter(search);
+            search.setRowFilter(javax.swing.RowFilter.regexFilter(timKiem));
+            return true;
+        }
+        return false;
     }
 
     // Chức năng tìm kiếm
-    private void searchHoaDon() {
-        DefaultTableModel model = (DefaultTableModel) tblHoaDon.getModel();
-        TableRowSorter<DefaultTableModel> search = new TableRowSorter<>(model);
-        tblHoaDon.setRowSorter(search);
-        search.setRowFilter(javax.swing.RowFilter.regexFilter(txtTimHD.getText()));
+    public boolean searchHoaDon(String timKiemHD) {
+      if(timKiemHD != null){
+          DefaultTableModel model = (DefaultTableModel) tblHoaDon.getModel();
+          TableRowSorter<DefaultTableModel> search = new TableRowSorter<>(model);
+          tblHoaDon.setRowSorter(search);
+          search.setRowFilter(javax.swing.RowFilter.regexFilter(timKiemHD));
+          return true;
+      }
+      return false;
     }
 
     //Chức năng validate Form
-    private boolean validateForm() {
+    private boolean validateForm(String maKM, String tenKM, String loaiKM, String giaTri, Date ngayBatDau, Date ngayKetThuc, String trangThai) {
         // Validate để trống trường dữ liệu
-        if (txtMaKM.getText().trim().equals("")) {
+        if (maKM.equals("")) {
             JOptionPane.showMessageDialog(this, "Vui lòng nhập vào mã khuyến mại");
             return false;
         }
 
-        if (txtTenKM.getText().trim().equals("")) {
+        if (tenKM.equals("")) {
             JOptionPane.showMessageDialog(this, "Vui lòng nhập vào tên khuyến mại");
             return false;
         }
-        if (txtGiaTriKM.getText().trim().equals("")) {
+        if (String.valueOf(giaTri).equals("")) {
             JOptionPane.showMessageDialog(this, "Vui lòng nhập giá trị khuyến mại");
             return false;
         }
-        if (txtNgayBatDau.getDate() == null) {
+        if (ngayBatDau == null) {
             JOptionPane.showMessageDialog(this, "Vui lòng nhập vào ngày bắt đầu khuyến mại");
             return false;
         }
-        if (txtNgayKetThuc.getDate() == null) {
+        if (ngayKetThuc == null) {
             JOptionPane.showMessageDialog(this, "Vui lòng nhập vào ngày kết thúc khuyến mại");
             return false;
         }
 
-        if (String.valueOf(txtNgayBatDau.getDate()).equals("")) {
+        if (String.valueOf(ngayKetThuc).equals("")) {
             JOptionPane.showMessageDialog(this, "Vui lòng nhập vào ngày bắt đầu khuyến mại");
             return false;
         }
 
-        if (String.valueOf(txtNgayKetThuc.getDate()).equals("")) {
+        if (String.valueOf(ngayKetThuc).equals("")) {
             JOptionPane.showMessageDialog(this, "Vui lòng nhập vào ngày kết thúc khuyến mại");
             return false;
         }
 
         // Check trùng mã khuyến mại không trùng nhau
-        int count = service.selectById(txtMaKM.getText().trim());
+        int count = service.selectById(maKM);
         if (count > 0) {
             JOptionPane.showMessageDialog(this, "Mã khuyến mại đã tồn tại vui lòng nhập lại");
             return false;
         }
         // Check mã khuyến mại chứa ký tự đặc biệt
-        String maKM = txtMaKM.getText().trim();
         if (!isValidSaleId(maKM)) {
             JOptionPane.showMessageDialog(this, "Mã khuyến mại không hợp lệ, vui lòng nhập lại");
             return false;
         }
         // Validate Tên nhân viên đúng định dạng không chứa ký tự đặc biệt hoặc số
-        if (!isValidEmployeeName(txtTenKM.getText().trim())) {
+        if (!isValidEmployeeName(tenKM)) {
             JOptionPane.showMessageDialog(this, "Tên khuyến mại không hợp lệ, vui lòng nhập lại");
             return false;
         }
-        // Validate giá trị khuyến mãi
-        try {
-            Integer giaTriKM = Integer.parseInt(txtGiaTriKM.getText());
-            if (giaTriKM > 50) {
-                JOptionPane.showMessageDialog(this, "Giá trị Khuyến mãi phải là phải nhỏ hơn 50");
+
+        for (int i = 0; i < giaTri.length(); i++) {
+            char c = giaTri.charAt(i);
+            if (!Character.isDigit(c)) {
+                JOptionPane.showMessageDialog(this, "Giá trị Khuyến mãi không được chứa ký tự đặc biệt");
                 return false;
             }
+        }
+        // Validate giá trị khuyến mãi
+        try {
+            Integer giaTriKM = Integer.parseInt(String.valueOf(giaTri));
+            if (giaTriKM > 50) {
+                JOptionPane.showMessageDialog(this, "Giá trị Khuyến mãi phải nhỏ hơn 50");
+                return false;
+            }
+            if (giaTriKM < 0) {
+                JOptionPane.showMessageDialog(this, "Giá trị Khuyến mãi phải lớn hơn 0");
+                return false;
+            }
+
+            // Kiểm tra chuỗi có ký tự đặc biệt không
+//            if (!giaTri.matches("[0-9]+")) {
+//                JOptionPane.showMessageDialog(this, "Giá trị Khuyến mãi không được chứa ký tự đặc biệt");
+//                return false;
+//            }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Giá trị Khuyến mãi phải là số");
             return false;
@@ -360,7 +393,6 @@ public class Form_KhuyenMai extends javax.swing.JPanel {
         // Tạo Regex hợp lệ cho ngày bắt đầu
         String dobRegex = "^(0[1-9]|[12][0-9]|3[01])-(0[1-9]|1[0-2])-(19|20)\\d{2}$";
 
-        Date ngayBatDau = txtNgayBatDau.getDate();
         String dob = new SimpleDateFormat("dd-MM-yyyy").format(ngayBatDau);
 
         if (!dob.matches(dobRegex)) {
@@ -368,11 +400,135 @@ public class Form_KhuyenMai extends javax.swing.JPanel {
             return false;
         }
 
-        Date ngayKetThuc = txtNgayKetThuc.getDate();
         String dobEnd = new SimpleDateFormat("dd-MM-yyyy").format(ngayKetThuc);
 
         if (!dobEnd.matches(dobRegex)) {
             JOptionPane.showMessageDialog(this, "Ngày kết thúc không hợp lệ");
+            return false;
+        }
+
+        Date ngayHienTai = new Date();
+
+        if(ngayBatDau.before(ngayHienTai)){
+            JOptionPane.showMessageDialog(this, "Ngày bắt đầu đã qua");
+            return false;
+        }
+
+        if(ngayBatDau.after(ngayKetThuc)){
+            JOptionPane.showMessageDialog(this, "Ngày bắt đầu phải trước ngày kết thúc");
+            return false;
+        }
+
+        return true;
+    }
+
+
+
+
+    private boolean validateFormUpdate(String maKM, String tenKM, String loaiKM, String giaTri, Date ngayBatDau, Date ngayKetThuc, String trangThai) {
+        // Validate để trống trường dữ liệu
+        if (maKM.equals("")) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập vào mã khuyến mại");
+            return false;
+        }
+
+        if (tenKM.equals("")) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập vào tên khuyến mại");
+            return false;
+        }
+        if (String.valueOf(giaTri).equals("")) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập giá trị khuyến mại");
+            return false;
+        }
+        if (ngayBatDau == null) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập vào ngày bắt đầu khuyến mại");
+            return false;
+        }
+        if (ngayKetThuc == null) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập vào ngày kết thúc khuyến mại");
+            return false;
+        }
+
+        if (String.valueOf(ngayKetThuc).equals("")) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập vào ngày bắt đầu khuyến mại");
+            return false;
+        }
+
+        if (String.valueOf(ngayKetThuc).equals("")) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập vào ngày kết thúc khuyến mại");
+            return false;
+        }
+
+        // Check trùng mã khuyến mại không trùng nhau
+        int count = service.selectById(maKM);
+        if (count == 0) {
+            JOptionPane.showMessageDialog(this, "Mã khuyến mại không tồn tại vui lòng nhập lại");
+            return false;
+        }
+        // Check mã khuyến mại chứa ký tự đặc biệt
+        if (!isValidSaleId(maKM)) {
+            JOptionPane.showMessageDialog(this, "Mã khuyến mại không hợp lệ, vui lòng nhập lại");
+            return false;
+        }
+        // Validate Tên nhân viên đúng định dạng không chứa ký tự đặc biệt hoặc số
+        if (!isValidEmployeeName(tenKM)) {
+            JOptionPane.showMessageDialog(this, "Tên khuyến mại không hợp lệ, vui lòng nhập lại");
+            return false;
+        }
+
+
+        // Validate giá trị khuyến mãi
+        try {
+            Integer giaTriKM = Integer.parseInt(String.valueOf(giaTri));
+            if (giaTriKM > 50) {
+                JOptionPane.showMessageDialog(this, "Giá trị Khuyến mãi phải nhỏ hơn 50");
+                return false;
+            }
+            if (giaTriKM < 0) {
+                JOptionPane.showMessageDialog(this, "Giá trị Khuyến mãi phải lớn hơn 0");
+                return false;
+            }
+
+            for (int i = 0; i < giaTri.length(); i++) {
+                char c = giaTri.charAt(i);
+                if (!Character.isDigit(c)) {
+                    JOptionPane.showMessageDialog(this, "Giá trị Khuyến mãi không được chứa ký tự đặc biệt");
+                    return false;
+                }
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Giá trị Khuyến mãi phải là số");
+            return false;
+        }
+
+
+
+        // Tạo Regex hợp lệ cho ngày bắt đầu
+        String dobRegex = "^(0[1-9]|[12][0-9]|3[01])-(0[1-9]|1[0-2])-(19|20)\\d{2}$";
+
+        String dob = new SimpleDateFormat("dd-MM-yyyy").format(ngayBatDau);
+
+        if (!dob.matches(dobRegex)) {
+            JOptionPane.showMessageDialog(this, "Ngày bắt đầu không hợp lệ");
+            return false;
+        }
+
+        String dobEnd = new SimpleDateFormat("dd-MM-yyyy").format(ngayKetThuc);
+
+        if (!dobEnd.matches(dobRegex)) {
+            JOptionPane.showMessageDialog(this, "Ngày kết thúc không hợp lệ");
+            return false;
+        }
+
+        Date ngayHienTai = new Date();
+
+        if(ngayBatDau.before(ngayHienTai)){
+            JOptionPane.showMessageDialog(this, "Ngày bắt đầu đã qua");
+            return false;
+        }
+
+        if(ngayBatDau.after(ngayKetThuc)){
+            JOptionPane.showMessageDialog(this, "Ngày bắt đầu phải trước ngày kết thúc");
             return false;
         }
 
@@ -872,44 +1028,80 @@ public class Form_KhuyenMai extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+//    Nút xóa khuyến mãi
     private void btnXoaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXoaActionPerformed
         // TODO add your handling code here:
-        deleteKhuyeMai();
+        int row =  tblKhuyenMai.getSelectedRow();
+        String  maKhuyenMai = tblKhuyenMai.getValueAt(row, 0).toString();
+                deleteKhuyeMai(row,maKhuyenMai);
     }//GEN-LAST:event_btnXoaActionPerformed
 
+//    Nút xóa form
     private void btnCapNhatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCapNhatActionPerformed
         // TODO add your handling code here:
         clearForm();
     }//GEN-LAST:event_btnCapNhatActionPerformed
-
+// Nút tìm kiếm Khuyến mãi
     private void txtTimKMKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTimKMKeyReleased
         // TODO add your handling code here:
-        searchKhuyenMai();
+        String timKiem = txtTimKM.getText();
+        searchKhuyenMai(timKiem);
     }//GEN-LAST:event_txtTimKMKeyReleased
 
     private void btnTimKMActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTimKMActionPerformed
         // TODO add your handling code here:
-        searchKhuyenMai();
+        String timKiem = txtTimKM.getText();
+        searchKhuyenMai(timKiem);
     }//GEN-LAST:event_btnTimKMActionPerformed
 
+//    Nút thêm khuyến mãi
     private void btnThem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThem1ActionPerformed
         // TODO add your handling code here:
-        addKhuyenMai();
+
+
+
+        String maKM = txtMaKM.getText().trim();
+        String tenKM = txtTenKM.getText().trim();
+        String loaiKM = "";
+        loaiKM = cboLoaiKM.getSelectedItem().toString();
+        String giaTri = txtGiaTriKM.getText().trim();
+        Date ngayBatDau = txtNgayBatDau.getDate();
+        Date ngayKetThuc = txtNgayKetThuc.getDate();
+        String trangThai =cboTrangThai.getSelectedItem().toString();
+
+
+        addKhuyenMai(maKM,tenKM,loaiKM,giaTri,ngayBatDau,ngayKetThuc,trangThai);
     }//GEN-LAST:event_btnThem1ActionPerformed
 
+//    Nút tìm kiếm hóa đơn
     private void txtTimHDKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTimHDKeyReleased
         // TODO add your handling code here:
-        searchHoaDon();
+        String timKiem = txtTimHD.getText();
+        searchHoaDon(timKiem);
     }//GEN-LAST:event_txtTimHDKeyReleased
-
+    //    Nút tìm kiếm hóa đơn
     private void btnTimSpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTimSpActionPerformed
-        searchHoaDon();
+        String timKiem = txtTimHD.getText();
+        searchHoaDon(timKiem);
 
     }//GEN-LAST:event_btnTimSpActionPerformed
 
+//    Nút sửa khuyến mãi
     private void btnCapNhat1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCapNhat1ActionPerformed
         // TODO add your handling code here:
-        updateKhuyenMai();
+
+
+                int row = tblKhuyenMai.getSelectedRow();
+                String maKM = tblKhuyenMai.getValueAt(row, 0).toString();
+                String tenKM = txtTenKM.getText().trim();
+                String loaiKM = "";
+                loaiKM = cboLoaiKM.getSelectedItem().toString();
+                String giaTri = txtGiaTriKM.getText().trim();
+                Date ngayBatDau = txtNgayBatDau.getDate();
+                Date ngayKetThuc = txtNgayKetThuc.getDate();
+                String trangThai =cboTrangThai.getSelectedItem().toString();
+
+        updateKhuyenMai(maKM,tenKM,loaiKM,giaTri,ngayBatDau,ngayKetThuc,trangThai);
     }//GEN-LAST:event_btnCapNhat1ActionPerformed
 
     private void tblKhuyenMaiMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblKhuyenMaiMouseClicked
