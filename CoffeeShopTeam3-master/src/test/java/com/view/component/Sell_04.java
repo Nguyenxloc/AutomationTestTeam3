@@ -15,6 +15,7 @@ public class Sell_04 extends TestCase {
     LoginFrame login = new LoginFrame();
 
     public void testShowDetailHoaDonTab() {
+        //TestCase SELL_04 chuyển trạng thái của hóa đơn
         //Bước 1: login vào hệ thống
         assertEquals(true, login.checkingPort("nguyenloc", "123456"));
         //Bước 2: chọn hóa đơn

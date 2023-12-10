@@ -17,6 +17,7 @@ public class Sell_08 extends TestCase {
     LoginFrame login = new LoginFrame();
     HoaDonChiTietNoIMG hoaDonChiTietNoIMG = HoaDonChiTietNoIMG_singleton.getInstance().hoaDonChiTietNoIMG;
     public void testShowDetailHoaDonTab() {
+        //Testcase: sell_08 sửa số lượng đồ uống với số lượng nhập vào trong vùng lớn vô cùng
         //Bước 1: login vào hệ thống
         assertEquals(true, login.checkingPort("nguyenloc", "123456"));
         //Bước 2: chọn hóa đơn

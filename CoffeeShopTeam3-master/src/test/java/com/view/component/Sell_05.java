@@ -17,6 +17,7 @@ public class Sell_05 extends TestCase {
     paneOfProduct paneProduct = new paneOfProduct(lstChiTietDoUongs, sellFrame.getTblDrinkDetail(), sellFrame.getLocalHoaDon(), sellFrame.getLblTotalCash());
 
     public void testShowDetailHoaDonTab() {
+        //TestCas SELL_05 thêm mã giảm giá với mã giảm giá hợp lệ
         //Bước 1: login vào hệ thống
         assertEquals(true, login.checkingPort("nguyenloc", "123456"));
         //Bước 2: chọn hóa đơn

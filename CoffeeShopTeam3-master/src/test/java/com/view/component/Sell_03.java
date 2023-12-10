@@ -20,6 +20,7 @@ public class Sell_03 extends TestCase {
     ChiTietDoUong drinkDetail2 = LstChiTietDoUong_singleton.getInstance().lstChiTietDoUongs.get(3);
 
     public void testShowDetailHoaDonTab() {
+        //TestCase: SEll_03 thêm đồ uống với 2 đồ uống trùng nhau
         //Bước 1: login vào hệ thống
         assertEquals(true, login.checkingPort("nguyenloc", "123456"));
         //Bước 2: chọn hóa đơn

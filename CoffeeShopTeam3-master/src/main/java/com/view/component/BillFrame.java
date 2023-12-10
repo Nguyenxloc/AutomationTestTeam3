@@ -184,10 +184,17 @@ public class BillFrame extends javax.swing.JFrame {
 
     public boolean updateDiscount(String code) {
         boolean stt  = false;
+        int checkStage = 0;
         try {
             if (!code.strip().equals("")) {
-                hoaDonService.updateDiscount(code.strip(), LocalId);
-                int checkStage = 0;
+                    if(hoaDonService.updateDiscount(code.strip(), LocalId)==true){
+                        stt = true;
+                    }
+                    else{
+                        stt = false;
+                        JOptionPane.showMessageDialog(this, "Mã giảm giá không đúng !");
+                    }
+
                 for (HoaDon hd : LstHoaDon_singleton.getInstance().lstHoaDon) {
                     if (hd.getId().equalsIgnoreCase(LocalId)) {
                         try {

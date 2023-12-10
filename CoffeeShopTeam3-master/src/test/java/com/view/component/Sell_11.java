@@ -16,7 +16,8 @@ public class Sell_11 extends TestCase {
     Form_BanHang sellFrame = new Form_BanHang();
     LoginFrame login = new LoginFrame();
     HoaDonChiTietNoIMG hoaDonChiTietNoIMG = HoaDonChiTietNoIMG_singleton.getInstance().hoaDonChiTietNoIMG;
-    public void testShowDetailHoaDonTab() {
+    public void testShowDesetailHoaDonTab() {
+        //Testcase: sell_11 thanh toán hóa đơn
         //Bước 1: login vào hệ thống
         assertEquals(true, login.checkingPort("nguyenloc", "123456"));
         //Bước 2: chọn hóa đơn

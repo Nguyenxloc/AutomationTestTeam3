@@ -241,14 +241,17 @@ public class DAO_HoaDon {
         }
     }
 
-    public void updateDiscount(String maGiamGia, String id) {
+    public boolean updateDiscount(String maGiamGia, String id) {
+        boolean stt = false;
         DBConnection1 dbConn = new DBConnection1();
         try {
             dbConn.ExcuteSQL(UPDATE_DISCOUNT, maGiamGia, id);
+            stt = true;
         } catch (Exception e) {
             e.printStackTrace();
+            stt = false;
         }
-
+    return stt ;
     }
 
     // Hàm lấy hóa đơn trong màn Giảm giá(Sale) theo mã giảm giá

@@ -71,8 +71,8 @@ public class HoaDonService {
         dao_HoaDon.updateSttCheckBill(i, LocalId);
     }
     
-    public void updateDiscount(String maGiamGia, String id) {
-        dao_HoaDon.updateDiscount(maGiamGia, id);
+    public boolean updateDiscount(String maGiamGia, String id) {
+        return dao_HoaDon.updateDiscount(maGiamGia, id);
     }
     
     public ArrayList<HoaDon> selectHoaDonBySale() {
