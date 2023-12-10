@@ -668,9 +668,9 @@ public class Form_QLDoUong extends javax.swing.JPanel {
                 }
         ));
         tblDanhSachDoUong.addMouseListener(new java.awt.event.MouseAdapter() {
-//            public void mouseClicked(java.awt.event.MouseEvent evt) {
-//                tblDanhSachDoUongMouseClicked(evt);
-//            }
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblDanhSachDoUongMouseClicked(evt);
+            }
         });
         jScrollPane2.setViewportView(tblDanhSachDoUong);
 
