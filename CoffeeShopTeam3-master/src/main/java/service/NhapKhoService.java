@@ -56,13 +56,13 @@ public class NhapKhoService implements INhapKhoService{
     }
 
     @Override
-    public boolean xoa(String id) {
+    public Integer xoa(String id) {
          try {
             nhapKhoRepository.xoa(id);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        return false;
+        return 1;
     }
 
     @Override

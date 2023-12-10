@@ -33,13 +33,7 @@ public class BanServiceHung implements IBanService{
     @Override
     public void them(QLBan ban) {
         BanHung domainModel = new BanHung(ban.getIdBan(), ban.getTen());
-        if(banRepository.checkMa(ban.getIdBan())){
-            JOptionPane.showMessageDialog(null, "Id đã tồn tại");
-            return;
-        }else{
-            JOptionPane.showMessageDialog(null, "Thêm Thành Công");
-            banRepository.them(domainModel);
-        }
+        banRepository.them(domainModel);
     }
 
     @Override
@@ -50,13 +44,7 @@ public class BanServiceHung implements IBanService{
     @Override
     public void sua(QLBan ban) {
         BanHung domainModel = new BanHung(ban.getIdBan(), ban.getTen());
-        if(banRepository.checkMa(ban.getIdBan())){
-            JOptionPane.showMessageDialog(null, "Sửa Thành Công");
-             banRepository.sua(domainModel);
-        }else{
-            JOptionPane.showMessageDialog(null, "Id không thể sửa");
-            return;
-        }
+        banRepository.sua(domainModel);
     }
     
 }
