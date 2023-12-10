@@ -9,7 +9,7 @@ import DoUong_HoaDon_ThongKe_Model.LichSuHoaDon;
 import DoUong_HoaDon_ThongKe_Service.LichSuHoaDonService;
 import java.sql.Date;
 import java.util.ArrayList;
-import javax.swing.RowFilter;
+import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 
@@ -57,7 +57,8 @@ public class Form_QLHoaDon extends javax.swing.JPanel {
     }
 
     // Load dữ liệu theo thời gian truyền vào
-    public String loadDataTheoTime(Date d1, Date d2) {
+    public boolean loadDataTheoTime(Date d1, Date d2) {
+        boolean status = false;
         try {
             model = (DefaultTableModel) tblLichSuHoaDon.getModel();
             model.setRowCount(0);
@@ -75,10 +76,12 @@ public class Form_QLHoaDon extends javax.swing.JPanel {
                     lichSuHoaDon.hienThiTrangThai()
                 });
             }
+            status = true;
         } catch (Exception e) {
             e.printStackTrace();
+            status = false;
         }
-        return null;
+        return status;
     }
 
 
@@ -511,7 +514,7 @@ public class Form_QLHoaDon extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void tblLichSuHoaDonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblLichSuHoaDonMouseClicked
+    private void tblLichSuHoaDonMouseClicked(java.awt.event.MouseEvent evt) {
         // TODO add your handling code here:
 
 //        if (evt.getClickCount() >= 1) {
@@ -520,7 +523,23 @@ public class Form_QLHoaDon extends javax.swing.JPanel {
         loadDataHoaDon(maHoaDon);
 //        }
 
-    }//GEN-LAST:event_tblLichSuHoaDonMouseClicked
+    }
+
+    public boolean timKiem(String tenHoaDon) {
+        boolean status = false;
+        if (tenHoaDon == null || tenHoaDon.equals("")) {
+            JOptionPane.showMessageDialog(this, "Nhập tên hóa đơn");
+            status = false;
+        } else {
+            DefaultTableModel model = (DefaultTableModel) tblLichSuHoaDon.getModel();
+            TableRowSorter<DefaultTableModel> obj = new TableRowSorter<>(model);
+            tblLichSuHoaDon.setRowSorter(obj);
+            obj.setRowFilter(RowFilter.regexFilter(txtTimTheoMa.getText()));
+            JOptionPane.showMessageDialog(this, "Tìm thành công");
+            status = true;
+        }
+        return status;
+    }
 
     private void btnTimKiemTheoNgayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTimKiemTheoNgayActionPerformed
 
@@ -544,10 +563,7 @@ public class Form_QLHoaDon extends javax.swing.JPanel {
 
     private void txtTimTheoMaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTimTheoMaKeyReleased
         // TODO add your handling code here:
-        DefaultTableModel model = (DefaultTableModel) tblLichSuHoaDon.getModel();
-        TableRowSorter<DefaultTableModel> obj = new TableRowSorter<>(model);
-        tblLichSuHoaDon.setRowSorter(obj);
-        obj.setRowFilter(RowFilter.regexFilter(txtTimTheoMa.getText()));
+//        timKiem(tenHoaDon);
     }//GEN-LAST:event_txtTimTheoMaKeyReleased
 
 
